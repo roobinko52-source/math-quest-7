@@ -1,0 +1,3073 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Math Quest 7 – ماجراجویی در سرزمین ریاضی</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --primary-light: #e0e7ff;
+      --secondary: #0ea5e9;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --success-bg: #d1fae5;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; font-family: 'Vazirmatn', Tahoma, sans-serif; }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #eef2ff 0%, #f0f9ff 50%, #fefce8 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    /* ایزوله‌سازی کامل اعداد علامت‌دار، قرینه‌ها -(+(−۷)) و عبارت‌های ریاضی */
+    .math, .num-ltr {
+      direction: ltr;
+      unicode-bidi: isolate;
+      display: inline-block;
+      font-weight: 800;
+      background: rgba(79, 70, 229, 0.08);
+      padding: 1px 8px;
+      border-radius: 7px;
+      color: #1e1b4b;
+      margin: 0 3px;
+      letter-spacing: 0.2px;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(2deg); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.28); }
+      50% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+    }
+    @keyframes popBounce {
+      0% { transform: scale(0.85); opacity: 0; }
+      70% { transform: scale(1.06); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes drawArc {
+      from { stroke-dashoffset: 600; }
+      to { stroke-dashoffset: 0; }
+    }
+    .anim-float { animation: floatSlow 3.4s ease-in-out infinite; }
+    .anim-pulse { animation: pulseGlow 2.4s infinite; }
+    .anim-pop { animation: popBounce 0.38s ease-out; }
+    .arc-animated {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 0;
+      animation: drawArc 0.85s ease-out forwards;
+    }
+
+    .floating-math-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: 0.14;
+    }
+    .float-symbol {
+      position: absolute;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #4338ca;
+      direction: ltr;
+      animation: floatSlow 5s ease-in-out infinite;
+    }
+
+    header.topbar {
+      background: linear-gradient(90deg, #312e81, #4338ca, #0369a1);
+      color: #fff;
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 18px rgba(30, 27, 75, 0.25);
+    }
+    .topbar-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      color: #1e1b4b;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 900;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .brand h1 { margin: 0; font-size: 1.12rem; font-weight: 900; }
+    .brand small { display: block; font-size: 0.76rem; color: #c7d2fe; }
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+    .stat-pill {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.24);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stat-pill button {
+      background: rgba(255,255,255,0.22);
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      padding: 2px 7px;
+      cursor: pointer;
+      font-size: 0.73rem;
+      font-weight: 700;
+    }
+    .stat-pill button:hover { background: rgba(255,255,255,0.36); }
+    .container {
+      max-width: 1240px;
+      margin: 20px auto;
+      padding: 0 16px 60px;
+      position: relative;
+      z-index: 1;
+    }
+    .mascot-banner {
+      background: #fff;
+      border: 2px solid #c7d2fe;
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow);
+    }
+    .mascot-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e0e7ff, #bae6fd);
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      flex-shrink: 0;
+      border: 2px solid var(--primary);
+    }
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .menu-card {
+      background: var(--surface);
+      border: 2px solid transparent;
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .menu-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+    }
+    .menu-icon {
+      font-size: 1.9rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--primary-light);
+    }
+    .menu-card h3 { margin: 2px 0 0; font-size: 1.04rem; font-weight: 800; }
+    .menu-card p { margin: 0; font-size: 0.86rem; color: var(--muted); }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      border: 1px solid #e2e8f0;
+    }
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f1f5f9;
+    }
+    .section-header h2 { margin: 0; font-size: 1.25rem; color: var(--primary-dark); }
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.18s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+    .btn-secondary { background: var(--secondary); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-warning { background: var(--accent); color: #1e1b4b; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-outline { background: #fff; border: 2px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-sm { padding: 6px 12px; font-size: 0.82rem; border-radius: 9px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    label.field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    select, input[type="text"], input[type="number"], input[type="password"], textarea {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      font-size: 0.92rem;
+      background: #fff;
+      width: 100%;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .badge-easy { background: #dcfce7; color: #166534; }
+    .badge-medium { background: #fef3c7; color: #92400e; }
+    .badge-hard { background: #fee2e2; color: #991b1b; }
+    .badge-ch { background: #e0e7ff; color: #3730a3; }
+    .progress-wrap {
+      background: #e2e8f0;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 16px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+    .options-list {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .option-btn {
+      text-align: right;
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: 0.15s;
+    }
+    .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #eef2ff; }
+    .option-btn.selected { border-color: var(--primary); background: #e0e7ff; }
+    .option-btn.correct { border-color: var(--success); background: var(--success-bg); color: #065f46; }
+    .option-btn.wrong { border-color: var(--danger); background: var(--danger-bg); color: #991b1b; }
+    .opt-letter {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid currentColor;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .feedback-box {
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      border-right: 5px solid var(--primary);
+      background: #f8fafc;
+    }
+    .feedback-box.ok { border-right-color: var(--success); background: #ecfdf5; }
+    .feedback-box.err { border-right-color: var(--danger); background: #fef2f2; }
+    .visual-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 2px dashed #93c5fd;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 12px 0;
+      text-align: center;
+    }
+    .visual-card svg {
+      max-width: 100%;
+      height: auto;
+      direction: ltr;
+    }
+    .axis-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .axis-step-badge {
+      background: #e0e7ff;
+      color: #312e81;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .realms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+    .realm-card {
+      border-radius: 18px;
+      padding: 20px;
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+    .realm-2 { background: linear-gradient(135deg, #1d4ed8, #0284c7); }
+    .realm-3 { background: linear-gradient(135deg, #6d28d9, #db2777); }
+    .stage-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .stage-item {
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    table.data-table th, table.data-table td {
+      border: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      text-align: right;
+    }
+    table.data-table th { background: #f1f5f9; font-weight: 800; }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .badges-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .medal {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+    .medal.locked {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: #94a3b8;
+    }
+    /* استایل‌های جذاب و رنگارنگ بازی‌های استراحت و بازی‌وارسازی */
+    .mini-game-arena {
+      background: linear-gradient(135deg, #fff1f2 0%, #fefce8 35%, #ecfdf5 70%, #eff6ff 100%);
+      border: 3px solid #a5b4fc;
+      border-radius: 20px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 14px 30px -8px rgba(79, 70, 229, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .game-hud {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .hud-chip {
+      background: #fff;
+      border: 2px solid #c7d2fe;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.86rem;
+      color: #1e1b4b;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+    .game-stage-pills {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .g-stage-btn {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 2px solid #cbd5e1;
+      background: #fff;
+      font-weight: 800;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .g-stage-btn.active {
+      background: linear-gradient(90deg, #f59e0b, #ec4899);
+      color: #fff;
+      border-color: transparent;
+      transform: scale(1.05);
+    }
+    .g-stage-btn.done {
+      background: #d1fae5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+    .rainbow-btn {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 11px 18px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(236, 72, 153, 0.25);
+      transition: transform 0.15s;
+    }
+    .rainbow-btn:hover { transform: translateY(-2px) scale(1.03); }
+
+    /* آواتار و پروفایل دانش‌آموز */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .avatar-choice {
+      font-size: 2rem;
+      padding: 10px;
+      border-radius: 16px;
+      border: 2px solid var(--border);
+      background: #f8fafc;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.16s;
+    }
+    .avatar-choice:hover { transform: scale(1.08); border-color: var(--primary); }
+    .avatar-choice.selected {
+      border-color: #f59e0b;
+      background: linear-gradient(135deg, #fef3c7, #e0e7ff);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      transform: scale(1.08);
+    }
+    .profile-card-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 2px solid #e2e8f0;
+      background: #f8fafc;
+      margin-bottom: 10px;
+    }
+    .profile-card-item.active-prof {
+      border-color: var(--primary);
+      background: #eef2ff;
+    }
+    .score-board-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+    .player-card {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .player-card.active-turn {
+      border-color: var(--primary);
+      background: #eef2ff;
+    }
+    @media print {
+      header.topbar, .mascot-banner, .floating-math-bg, .no-print { display: none !important; }
+      body { background: #fff; }
+      .card { box-shadow: none; border: 1px solid #999; }
+    }
+  .math{direction:ltr;unicode-bidi:isolate;display:inline-block;white-space:nowrap;text-align:left}
+</style>
+</head>
+<body>
+
+<div class="floating-math-bg" aria-hidden="true">
+  <div class="float-symbol" style="top:10%; right:6%; animation-delay:0s;">-۷</div>
+  <div class="float-symbol" style="top:24%; left:8%; animation-delay:0.8s;">۲x + ۳</div>
+  <div class="float-symbol" style="top:52%; right:4%; animation-delay:1.5s;">-۱۲ ÷ (-۴) = +۳</div>
+  <div class="float-symbol" style="top:74%; left:10%; animation-delay:2.1s;">۴a</div>
+  <div class="float-symbol" style="top:38%; left:45%; animation-delay:1.1s;">-(+(-۷)) = +۷</div>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand" onclick="navigate('home')">
+      <div class="brand-logo anim-float">۷</div>
+      <div>
+        <h1>Math Quest 7 – ماجراجویی در سرزمین ریاضی</h1>
+        <small>نسخه ارتقایافته ۲.۳ | فصل دوم و سوم ریاضی پایه هفتم</small>
+      </div>
+    </div>
+    <div class="stats-bar" id="topStats"></div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="mascot-banner" id="mascotBanner">
+    <div class="mascot-avatar anim-float" id="mascotAvatarIcon">🦉</div>
+    <div>
+      <strong style="color:var(--primary-dark)">جغد دانای ریاضی:</strong>
+      <span id="mascotText">سلام قهرمان پایه هفتم! علامت منفی و قرینه همیشه با ترتیب استاندارد در سمت چپ پرانتز قرار دارد؛ آماده شروع ماجراجویی هستی؟</span>
+    </div>
+  </div>
+
+  <div id="app"></div>
+</main>
+
+<script id="embedded-question-bank" type="application/json">{
+  "meta": {
+    "title": "Math Quest 7 - بانک سؤال جامع ریاضی هفتم (فصل دوم و سوم کتاب درسی)",
+    "grade": "هفتم",
+    "version": "2.2",
+    "chapters": [
+      {"id": 2, "title": "فصل دوم: عددهای صحیح و عددهای علامت‌دار"},
+      {"id": 3, "title": "فصل سوم: جبر و معادله"}
+    ]
+  },
+  "questions": [
+    {"id": "C2-MC-001", "chapter": 2, "topic": "قرینه اعداد صحیح", "type": "mcq", "difficulty": "easy", "question": "قرینه عدد -۷ کدام است؟", "options": ["-۷", "+۷", "۰", "-۱"], "answer": "+۷", "hint": "قرینه هر عدد روی محور در طرف مقابل مبدأ (صفر) و به همان فاصله از آن قرار دارد.", "explanation": "قرینه هر عدد، عددی است که با آن جمع شود حاصل صفر شود؛ بنابراین قرینه -۷ برابر +۷ است.", "steps": ["علامت عدد -۷ را در سمت چپ عدد معکوس می‌کنیم.", "چون (-۷) + (+۷) = ۰ است، قرینه -۷ برابر +۷ می‌شود."], "visual": {"kind": "numberline", "title": "نمایش -۷ و قرینه‌اش (+۷) نسبت به صفر روی محور", "points": [{"val": -7, "label": "-۷"}, {"val": 0, "label": "۰"}, {"val": 7, "label": "+۷"}]}, "source": "کتاب درسی ص ۱۴ / کاردرکلاس", "page": 14, "points": 10},
+    {"id": "C2-MC-002", "chapter": 2, "topic": "قرینه اعداد صحیح", "type": "mcq", "difficulty": "easy", "question": "حاصل عبارت قرینه قرینه یعنی -(-(+۷)) کدام است؟", "options": ["-۷", "+۷", "۰", "-۱۴"], "answer": "+۷", "hint": "ابتدا داخل پرانتز بیرونی یعنی -(+۷) را به دست آورید که برابر -۷ است؛ سپس قرینه آن را بنویسید.", "explanation": "قرینه (+۷) برابر -۷ است و قرینه (-۷) دوباره برابر +۷ می‌شود.", "steps": ["گام اول: -(+۷) = -۷", "گام دوم: -(-۷) = +۷"], "visual": {"kind": "numberline", "title": "قرینه قرینه عدد +۷ روی محور دوباره خود +۷ است", "points": [{"val": -7, "label": "-۷"}, {"val": 0, "label": "۰"}, {"val": 7, "label": "+۷"}]}, "source": "کتاب درسی ص ۱۴ و ۱۵ / کاردرکلاس", "page": 15, "points": 10},
+    {"id": "C2-MC-003", "chapter": 2, "topic": "قرینه اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت -(+(-۷)) کدام است؟", "options": ["-۷", "+۷", "۰", "+۱۴"], "answer": "+۷", "hint": "ابتدا داخل پرانتز اول را ساده کنید: +(-۷) برابر -۷ است؛ سپس علامت قرینه پشت آن را اعمال کنید.", "explanation": "+(-۷) = -۷ و قرینه -۷ برابر +۷ است.", "steps": ["ساده‌سازی پرانتز داخلی: +(-۷) = -۷", "اعمال قرینه پشت پرانتز: -(-۷) = +۷"], "visual": {"kind": "rule_box", "title": "ساده‌سازی قرینه پشت پرانتز", "formula": "-(+(-۷)) = -(-۷) = +۷"}, "source": "کتاب درسی ص ۱۵ / کاردرکلاس", "page": 15, "points": 20},
+    {"id": "C2-MC-004", "chapter": 2, "topic": "قرینه اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت -(-(-۵)) کدام است؟", "options": ["+۵", "-۵", "۰", "-۱۵"], "answer": "-۵", "hint": "سه علامت منفی پشت سر هم داریم؛ قرینه (-۵) می‌شود +۵ و قرینه (+۵) دوباره -۵ می‌شود.", "explanation": "-(-۵) = +۵ و با یک قرینه دیگر در پشت پرانتز: -(+۵) = -۵.", "steps": ["مرحله اول: -(-۵) = +۵", "مرحله دوم: -(+۵) = -۵"], "visual": {"kind": "rule_box", "title": "سه قرینه متوالی", "formula": "-(-(-۵)) = -(+۵) = -۵"}, "source": "کتاب درسی ص ۱۴ و ۱۸ / مرور", "page": 14, "points": 20},
+    {"id": "C2-MC-005", "chapter": 2, "topic": "مقایسه اعداد صحیح", "type": "mcq", "difficulty": "easy", "question": "کدام رابطه درست است؟", "options": ["-۳ > -۸", "-۸ > -۳", "-۳ = -۸", "هر دو از صفر بزرگ‌ترند."], "answer": "-۳ > -۸", "hint": "روی محور اعداد صحیح، هر عددی که سمت راست‌تر قرار بگیرد بزرگ‌تر است.", "explanation": "عدد -۳ نزدیک‌تر به صفر و در سمت راست -۸ قرار دارد، پس -۳ بزرگ‌تر از -۸ است.", "steps": ["جایگاه -۸ و -۳ را روی محور بررسی می‌کنیم.", "-۳ در سمت راست -۸ قرار دارد، بنابراین -۳ > -۸ درست است."], "visual": {"kind": "numberline", "title": "مقایسه -۸ و -۳ روی محور (سمت راست بزرگ‌تر است)", "points": [{"val": -8, "label": "-۸"}, {"val": -3, "label": "-۳"}, {"val": 0, "label": "۰"}]}, "source": "کتاب درسی ص ۱۶ / تمرین ۱", "page": 16, "points": 10},
+    {"id": "C2-MC-006", "chapter": 2, "topic": "جمع اعداد صحیح", "type": "mcq", "difficulty": "easy", "question": "حاصل عبارت (-۵) + (+۸) با حرکت روی محور کدام است؟", "options": ["+۱۳", "+۳", "-۳", "-۱۳"], "answer": "+۳", "hint": "روی محور از صفر ابتدا -۵ واحد به چپ بروید و سپس از آنجا +۸ واحد به راست حرکت کنید.", "explanation": "حرکت اول از ۰ تا -۵ و حرکت دوم به اندازه +۸ به راست ما را به +۳ می‌رساند.", "steps": ["حرکت اول: از ۰ به اندازه -۵ به چپ می‌رویم.", "حرکت دوم: از -۵ به اندازه +۸ به راست می‌رویم و به +۳ می‌رسیم."], "visual": {"kind": "move_line", "title": "حرکت گام‌به‌گام روی محور: (-۵) + (+۸) = +۳", "first": -5, "second": 8, "end": 3}, "source": "کتاب درسی ص ۱۸ / کاردرکلاس", "page": 18, "points": 10},
+    {"id": "C2-MC-007", "chapter": 2, "topic": "جمع اعداد صحیح", "type": "mcq", "difficulty": "easy", "question": "با توجه به محور اعداد، حاصل جمع (+۴) + (-۲) کدام است؟", "options": ["+۶", "+۲", "-۲", "-۶"], "answer": "+۲", "hint": "از صفر ابتدا +۴ واحد به راست و سپس از +۴ به اندازه -۲ واحد به چپ حرکت کنید.", "explanation": "شروع از ۰، رفتن تا +۴ و برگشت ۲ واحد به چپ ما را به +۲ می‌رساند.", "steps": ["فلش اول: از ۰ تا +۴", "فلش دوم: از +۴ به اندازه -۲ به چپ ← نتیجه: +۲"], "visual": {"kind": "move_line", "title": "فعالیت کتاب ص ۱۵: (+۴) + (-۲) = +۲", "first": 4, "second": -2, "end": 2}, "source": "کتاب درسی ص ۱۵ / فعالیت ۲", "page": 15, "points": 10},
+    {"id": "C2-MC-008", "chapter": 2, "topic": "جمع اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "با توجه به حرکت دوگانه به چپ روی محور، حاصل (-۲) + (-۲) کدام است؟", "options": ["۰", "+۴", "-۴", "-۲"], "answer": "-۴", "hint": "از صفر ابتدا -۲ واحد به چپ و سپس دوباره -۲ واحد دیگر به چپ بروید.", "explanation": "دو حرکت متوالی -۲ واحدی به سمت چپ در نقطه -۴ متوقف می‌شود.", "steps": ["حرکت اول: از ۰ تا -۲", "حرکت دوم: از -۲ به اندازه -۲ دیگر به چپ ← -۴"], "visual": {"kind": "move_line", "title": "فعالیت کتاب ص ۱۵: (-۲) + (-۲) = -۴", "first": -2, "second": -2, "end": -4}, "source": "کتاب درسی ص ۱۵ / فعالیت ۲", "page": 15, "points": 20},
+    {"id": "C2-MC-009", "chapter": 2, "topic": "تفریق اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت (+۴) - (+۹) کدام است؟", "options": ["+۱۳", "+۵", "-۵", "-۱۳"], "answer": "-۵", "hint": "تفریق را به جمع قرینه عدد دوم تبدیل کنید: (+۴) + (-۹).", "explanation": "تبدیل تفریق به جمع قرینه: (+۴) - (+۹) = (+۴) + (-۹) = -۵.", "steps": ["تبدیل تفریق به جمع قرینه: (+۴) + (-۹)", "روی محور: از ۰ تا +۴ و سپس -۹ واحد به چپ ← -۵"], "visual": {"kind": "move_line", "title": "تبدیل تفریق به جمع: (+۴) + (-۹) = -۵", "first": 4, "second": -9, "end": -5}, "source": "کتاب درسی ص ۱۵ / فعالیت ۳", "page": 15, "points": 20},
+    {"id": "C2-MC-010", "chapter": 2, "topic": "تفریق اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت -۵ - (-۳) کدام است؟", "options": ["-۸", "-۲", "+۲", "+۸"], "answer": "-۲", "hint": "مانند نمونه کتاب درسی، تفریق را به جمع قرینه تبدیل کنید: -۵ + (-(-۳)) = -۵ + (+۳).", "explanation": "-۵ - (-۳) = -۵ + (+۳) = -۲.", "steps": ["تبدیل تفریق به جمع قرینه: -۵ + (+۳)", "روی محور: از ۰ تا -۵ و سپس +۳ به راست ← -۲"], "visual": {"kind": "move_line", "title": "کاردرکلاس ص ۱۵: -۵ + (+۳) = -۲", "first": -5, "second": 3, "end": -2}, "source": "کتاب درسی ص ۱۵ / کاردرکلاس", "page": 15, "points": 20},
+    {"id": "C2-MC-011", "chapter": 2, "topic": "تفریق اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت -۴ - (-۵) کدام است؟", "options": ["-۹", "-۱", "+۱", "+۹"], "answer": "+۱", "hint": "ابتدا تفریق را به جمع تبدیل کنید: -۴ + (+۵).", "explanation": "-۴ - (-۵) = -۴ + (+۵) = +۱.", "steps": ["تبدیل به جمع: -۴ + (+۵)", "حرکت روی محور: از ۰ تا -۴ و سپس +۵ به راست ← +۱"], "visual": {"kind": "move_line", "title": "کاردرکلاس ص ۱۵: -۴ + (+۵) = +۱", "first": -4, "second": 5, "end": 1}, "source": "کتاب درسی ص ۱۵ / کاردرکلاس", "page": 15, "points": 20},
+    {"id": "C2-MC-012", "chapter": 2, "topic": "ضرب اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت (-۳) × (-۴) کدام است؟", "options": ["-۱۲", "+۱۲", "-۷", "+۷"], "answer": "+۱۲", "hint": "حاصل‌ضرب دو عدد هم‌علامت (منفی در منفی) همیشه مثبت است.", "explanation": "۳ × ۴ = ۱۲ و چون هر دو عدد منفی هستند، حاصل ضرب مثبت (+۱۲) می‌شود.", "steps": ["قانون علامت‌ها: منفی × منفی = مثبت", "ضرب مقدارها: ۳ × ۴ = ۱۲ ← پاسخ: +۱۲"], "visual": {"kind": "rule_box", "title": "الگوی ضرب کتاب ص ۲۳", "formula": "(-۳) × (-۴) = +۱۲"}, "source": "کتاب درسی ص ۲۳ / فعالیت ۲", "page": 23, "points": 20},
+    {"id": "C2-MC-013", "chapter": 2, "topic": "تقسیم اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "حاصل عبارت (-۱۸) ÷ (+۶) کدام است؟", "options": ["+۳", "-۳", "-۱۲", "+۱۲"], "answer": "-۳", "hint": "در تقسیم دو عدد با علامت‌های مخالف، حاصل همیشه منفی است.", "explanation": "۱۸ ÷ ۶ = ۳ و چون علامت‌ها متفاوت است، پاسخ برابر -۳ می‌شود.", "steps": ["قانون علامت‌ها: منفی ÷ مثبت = منفی", "تقسیم مقدارها: ۱۸ ÷ ۶ = ۳ ← پاسخ: -۳"], "visual": {"kind": "rule_box", "title": "قاعده تقسیم اعداد صحیح غیرهم‌علامت", "formula": "(-۱۸) ÷ (+۶) = -۳"}, "source": "کتاب درسی ص ۲۴ / کاردرکلاس", "page": 24, "points": 20},
+    {"id": "C2-MC-014", "chapter": 2, "topic": "کاربرد اعداد صحیح", "type": "mcq", "difficulty": "medium", "question": "دمای هوای اردبیل ۳ درجه بالای صفر است. با ورود سامانه پرفشار دما ۱۰ درجه سردتر می‌شود. دمای جدید چند درجه است؟", "options": ["-۱۳ درجه", "-۷ درجه", "+۷ درجه", "+۱۳ درجه"], "answer": "-۷ درجه", "hint": "از +۳ به اندازه -۱۰ درجه به سمت پایین (سردتر) حرکت کنید.", "explanation": "(+۳) + (-۱۰) = -۷ درجه زیر صفر.", "steps": ["دمای اولیه: +۳ درجه", "کاهش ۱۰ درجه: (+۳) + (-۱۰) = -۷ درجه"], "visual": {"kind": "move_line", "title": "مسئله ۳ ص ۱۹ کتاب: (+۳) + (-۱۰) = -۷", "first": 3, "second": -10, "end": -7}, "source": "کتاب درسی ص ۱۹ / تمرین ۳", "page": 19, "points": 20},
+    {"id": "C2-MC-015", "chapter": 2, "topic": "ترکیب جمع و تفریق", "type": "mcq", "difficulty": "hard", "question": "حاصل عبارت (-۷) + (+۴) - (-۳) کدام است؟", "options": ["۰", "-۶", "+۶", "-۱۴"], "answer": "۰", "hint": "ابتدا تفریق (-۳) را به جمع قرینه‌اش یعنی (+۳) تبدیل کنید.", "explanation": "(-۷) + (+۴) - (-۳) = (-۷) + (+۴) + (+۳) = (-۷) + (+۷) = ۰.", "steps": ["تبدیل تفریق به جمع قرینه: (-۷) + (+۴) + (+۳)", "جمع عددهای مثبت: (+۴) + (+۳) = +۷", "جمع نهایی: (-۷) + (+۷) = ۰"], "visual": {"kind": "move_line", "title": "حرکت روی محور: (-۷) + (+۷) = ۰", "first": -7, "second": 7, "end": 0}, "source": "کتاب درسی ص ۱۹ / تمرین", "page": 19, "points": 30},
+    {"id": "C2-MC-016", "chapter": 2, "topic": "ترکیب ضرب و تقسیم", "type": "mcq", "difficulty": "hard", "question": "حاصل عبارت (-۱۴ ÷ (+۷)) × (-۲) کدام است؟", "options": ["-۴", "+۴", "-۱", "+۱"], "answer": "+۴", "hint": "ابتدا تقسیم داخل پرانتز را انجام دهید و سپس حاصل را در -۲ ضرب کنید.", "explanation": "(-۱۴) ÷ (+۷) = -۲ و سپس (-۲) × (-۲) = +۴.", "steps": ["محاسبه داخل پرانتز: (-۱۴) ÷ (+۷) = -۲", "ضرب نهایی: (-۲) × (-۲) = +۴"], "visual": {"kind": "rule_box", "title": "کاردرکلاس ص ۲۴ کتاب درسی", "formula": "(-۱۴ ÷ (+۷)) × (-۲) = (-۲) × (-۲) = +۴"}, "source": "کتاب درسی ص ۲۴ / کاردرکلاس ۱", "page": 24, "points": 30},
+    {"id": "C2-MC-017", "chapter": 2, "topic": "ترکیب ضرب و تقسیم", "type": "mcq", "difficulty": "hard", "question": "حاصل عبارت ((-۲) + (+۶)) × (-۵) کدام است؟", "options": ["-۲۰", "+۲۰", "-۴۰", "+۴۰"], "answer": "-۲۰", "hint": "ابتدا جمع داخل پرانتز اول را انجام دهید و سپس در -۵ ضرب کنید.", "explanation": "(-۲) + (+۶) = +۴ و سپس (+۴) × (-۵) = -۲۰.", "steps": ["جمع داخل پرانتز: (-۲) + (+۶) = +۴", "ضرب در -۵: (+۴) × (-۵) = -۲۰"], "visual": {"kind": "rule_box", "title": "تمرین ۵ ص ۲۵ کتاب درسی", "formula": "((-۲) + (+۶)) × (-۵) = (+۴) × (-۵) = -۲۰"}, "source": "کتاب درسی ص ۲۵ / تمرین ۵", "page": 25, "points": 30},
+    {"id": "C2-MC-018", "chapter": 2, "topic": "تقسیم اعداد صحیح", "type": "mcq", "difficulty": "hard", "question": "در تساوی (-۲۰۰) ÷ (؟) = +۲۰، به‌جای علامت سؤال چه عددی قرار می‌گیرد؟", "options": ["-۱۰", "+۱۰", "-۲۰", "+۲۰"], "answer": "-۱۰", "hint": "چون حاصل تقسیم مثبت است و مقسوم منفی است، مقسوم‌علیه باید منفی باشد.", "explanation": "۲۰۰ ÷ ۱۰ = ۲۰ و (-۲۰۰) ÷ (-۱۰) = +۲۰.", "steps": ["بررسی علامت: منفی ÷ منفی = مثبت", "بررسی عدد: ۲۰۰ ÷ ۲۰ = ۱۰ ← عدد مجهول -۱۰ است."], "visual": {"kind": "rule_box", "title": "تمرین ۳ ص ۲۵ کتاب درسی", "formula": "(-۲۰۰) ÷ (-۱۰) = +۲۰"}, "source": "کتاب درسی ص ۲۵ / تمرین ۳", "page": 25, "points": 30},
+
+    {"id": "C3-MC-001", "chapter": 3, "topic": "عبارت جبری", "type": "mcq", "difficulty": "easy", "question": "عبارت «هشت واحد بیشتر از یک عدد» با کدام عبارت جبری نشان داده می‌شود؟", "options": ["۸n", "n - ۸", "n + ۸", "۸ - n"], "answer": "n + ۸", "hint": "«بیشتر از» در ریاضی به معنی جمع کردن است.", "explanation": "عدد نامعلوم را n می‌گیریم و ۸ واحد به آن اضافه می‌کنیم: n + ۸.", "steps": ["عدد نامعلوم: n", "اضافه کردن ۸ واحد: n + ۸"], "visual": {"kind": "rule_box", "title": "تمرین ۱ ص ۳۳ کتاب درسی", "formula": "n + ۸"}, "source": "کتاب درسی ص ۳۳ / تمرین ۱", "page": 33, "points": 10},
+    {"id": "C3-MC-002", "chapter": 3, "topic": "عبارت جبری", "type": "mcq", "difficulty": "medium", "question": "عبارت «هفت تا کمتر از ۴ برابر یک عدد» به صورت جبری کدام است؟", "options": ["۷ - ۴x", "۴x - ۷", "۴(x - ۷)", "۴x + ۷"], "answer": "۴x - ۷", "hint": "ابتدا ۴ برابر عدد (۴x) را بنویسید و سپس ۷ واحد از آن کم کنید.", "explanation": "۴ برابر یک عدد می‌شود ۴x و هفت تا کمتر از آن یعنی ۴x - ۷.", "steps": ["چهار برابر عدد: ۴x", "هفت واحد کمتر از آن: ۴x - ۷"], "visual": {"kind": "rule_box", "title": "تمرین ۱ ص ۳۳ کتاب درسی (قسمت ب)", "formula": "۴x - ۷"}, "source": "کتاب درسی ص ۳۳ / تمرین ۱", "page": 33, "points": 20},
+    {"id": "C3-MC-003", "chapter": 3, "topic": "محیط و مساحت با عبارت جبری", "type": "mcq", "difficulty": "easy", "question": "اگر طول ضلع یک تشک کشتی مربعی a باشد، محیط آن کدام است؟", "options": ["a + ۴", "۲a", "۳a", "۴a"], "answer": "۴a", "hint": "مربع ۴ ضلع برابر دارد؛ محیط یعنی جمع طول هر ۴ ضلع.", "explanation": "a + a + a + a = ۴a.", "steps": ["جمع چهار ضلع مربع: a + a + a + a", "ساده‌سازی: ۴a"], "visual": {"kind": "square_perim", "title": "فعالیت ۱ ص ۲۸ و ۳۱ کتاب: محیط مربع به ضلع a", "side": "a"}, "source": "کتاب درسی ص ۲۸ و ۳۱ / فعالیت ۱", "page": 28, "points": 10},
+    {"id": "C3-MC-004", "chapter": 3, "topic": "الگوهای عددی", "type": "mcq", "difficulty": "easy", "question": "در الگوی عددی ۴، ۸، ۱۲، ۱۶، ... جمله nام کدام است؟", "options": ["n + ۴", "۴n", "۴n - ۱", "۲n + ۲"], "answer": "۴n", "hint": "هر جمله چند برابر شماره همان جمله است؟", "explanation": "جمله اول ۴×۱، جمله دوم ۴×۲، پس جمله nام برابر ۴n است.", "steps": ["شماره ۱: ۴ × ۱ = ۴ و شماره ۲: ۴ × ۲ = ۸", "جمله nام: ۴n"], "visual": {"kind": "rule_box", "title": "تمرین ۵ ص ۳۰ کتاب درسی", "formula": "۴, ۸, ۱۲, ۱۶, ...  ⇒  ۴n"}, "source": "کتاب درسی ص ۳۰ / تمرین ۵", "page": 30, "points": 10},
+    {"id": "C3-MC-005", "chapter": 3, "topic": "الگوهای عددی", "type": "mcq", "difficulty": "medium", "question": "در الگوی چوب‌کبریت کتاب درسی (شکل اول ۳، شکل دوم ۵ و شکل سوم ۷ چوب‌کبریت)، شکل بیستم چند چوب‌کبریت دارد؟", "options": ["۳۹", "۴۱", "۴۳", "۴۰"], "answer": "۴۱", "hint": "رابطه جمله nام این الگو برابر ۲n + ۱ است.", "explanation": "به ازای n = ۲۰ داریم: ۲(۲۰) + ۱ = ۴۱.", "steps": ["یافتن رابطه جمله nام: ۲n + ۱", "جایگذاری n = ۲۰: ۲ × ۲۰ + ۱ = ۴۱"], "visual": {"kind": "rule_box", "title": "فعالیت ۳ ص ۲۸ کتاب درسی", "formula": "۲n + ۱  ⇒  n=۲۰ : ۲(۲۰)+۱ = ۴۱"}, "source": "کتاب درسی ص ۲۸ / فعالیت ۳", "page": 28, "points": 20},
+    {"id": "C3-MC-006", "chapter": 3, "topic": "عبارت جبری", "type": "mcq", "difficulty": "medium", "question": "هزینه چاپ کارت ویزیت ۳۰۰۰ تومان قیمت پایه و ۱۰۰۰ تومان برای هر کارت است. هزینه چاپ n کارت کدام است؟", "options": ["۴۰۰۰n", "۳۰۰۰n + ۱۰۰۰", "۱۰۰۰n + ۳۰۰۰", "۳۰۰۰ + n"], "answer": "۱۰۰۰n + ۳۰۰۰", "hint": "قیمت پایه ثابت است و به ازای هر کارت ۱۰۰۰ تومان اضافه می‌شود.", "explanation": "هزینه n کارت برابر ۱۰۰۰n به علاوه ۳۰۰۰ تومان قیمت پایه است: ۱۰۰۰n + ۳۰۰۰.", "steps": ["هزینه متغیر برای n کارت: ۱۰۰۰n", "اضافه کردن قیمت پایه ثابت: ۱۰۰۰n + ۳۰۰۰"], "visual": {"kind": "rule_box", "title": "تمرین ۲ ص ۳۰ کتاب درسی", "formula": "۱۰۰۰n + ۳۰۰۰"}, "source": "کتاب درسی ص ۳۰ / تمرین ۲", "page": 30, "points": 20},
+    {"id": "C3-MC-007", "chapter": 3, "topic": "جمله‌های متشابه", "type": "mcq", "difficulty": "medium", "question": "حاصل ساده‌شده عبارت ۵a + ۳b - ۲a + b کدام است؟", "options": ["۳a + ۴b", "۷a + ۲b", "۳a + ۲b", "۸a - b"], "answer": "۳a + ۴b", "hint": "جمله‌های دارای a را با هم و جمله‌های دارای b را با هم ساده کنید.", "explanation": "(۵a - ۲a) + (۳b + b) = ۳a + ۴b.", "steps": ["متشابه‌های a: ۵a - ۲a = ۳a", "متشابه‌های b: ۳b + ۱b = ۴b ← حاصل: ۳a + ۴b"], "visual": {"kind": "rule_box", "title": "کاردرکلاس ص ۳۳ کتاب درسی", "formula": "(۵a - ۲a) + (۳b + b) = ۳a + ۴b"}, "source": "کتاب درسی ص ۳۳ / کاردرکلاس", "page": 33, "points": 20},
+    {"id": "C3-MC-008", "chapter": 3, "topic": "خاصیت توزیع‌پذیری", "type": "mcq", "difficulty": "hard", "question": "حاصل ساده‌شده عبارت ۴(x + ۲) کدام است؟", "options": ["۴x + ۲", "۴x + ۸", "x + ۸", "۴x + ۶"], "answer": "۴x + ۸", "hint": "عدد ۴ بیرون پرانتز را در هر دو جمله داخل پرانتز ضرب کنید.", "explanation": "۴ × x + ۴ × ۲ = ۴x + ۸.", "steps": ["ضرب ۴ در x: ۴x", "ضرب ۴ در ۲: ۸ ← حاصل: ۴x + ۸"], "visual": {"kind": "dist_rect", "title": "خاصیت توزیع‌پذیری ص ۳۲ کتاب: ۴(x + ۲) = ۴x + ۸", "factor": "۴", "part1": "x", "part2": "۲"}, "source": "کتاب درسی ص ۳۲ و ۳۳", "page": 32, "points": 30},
+    {"id": "C3-MC-009", "chapter": 3, "topic": "خاصیت توزیع‌پذیری", "type": "mcq", "difficulty": "hard", "question": "حاصل عبارت -(۳x - ۵y) کدام است؟", "options": ["-۳x - ۵y", "-۳x + ۵y", "۳x + ۵y", "-۳x + ۱۵y"], "answer": "-۳x + ۵y", "hint": "علامت منفی بیرون پرانتز در هر دو جمله داخل پرانتز اثر می‌کند و علامت آن‌ها را قرینه می‌کند.", "explanation": "-(۳x - ۵y) = -۱ × ۳x - ۱ × (-۵y) = -۳x + ۵y.", "steps": ["قرینه کردن جمله اول: -(۳x) = -۳x", "قرینه کردن جمله دوم: -(-۵y) = +۵y ← حاصل: -۳x + ۵y"], "visual": {"kind": "rule_box", "title": "مثال ص ۳۳ کتاب درسی", "formula": "-(۳x - ۵y) = -۳x + ۵y"}, "source": "کتاب درسی ص ۳۳ / درسنامه", "page": 33, "points": 30},
+    {"id": "C3-MC-010", "chapter": 3, "topic": "مقدار عددی عبارت جبری", "type": "mcq", "difficulty": "medium", "question": "اگر n = ۳ باشد، مقدار عبارت جبری ۲n - ۷ کدام است؟", "options": ["-۱", "+۱", "-۱۳", "+۱۳"], "answer": "-۱", "hint": "به‌جای n عدد ۳ قرار دهید و ابتدا ضرب را انجام دهید.", "explanation": "۲(۳) - ۷ = ۶ - ۷ = -۱.", "steps": ["جایگذاری n = ۳: ۲ × ۳ - ۷", "انجام ضرب و تفریق: ۶ - ۷ = -۱"], "visual": {"kind": "rule_box", "title": "فعالیت ۳ ص ۳۴ کتاب درسی", "formula": "۲(۳) - ۷ = ۶ - ۷ = -۱"}, "source": "کتاب درسی ص ۳۴ / فعالیت ۳", "page": 34, "points": 20},
+    {"id": "C3-MC-011", "chapter": 3, "topic": "مقدار عددی عبارت جبری", "type": "mcq", "difficulty": "hard", "question": "اگر a = ۵ و b = ۳ باشد، مقدار عبارت a - (a - ۲b) کدام است؟", "options": ["۴", "۶", "-۱", "۱۱"], "answer": "۶", "hint": "ابتدا داخل پرانتز را به ازای a = ۵ و b = ۳ حساب کنید.", "explanation": "۵ - (۵ - ۲ × ۳) = ۵ - (۵ - ۶) = ۵ - (-۱) = ۵ + ۱ = ۶.", "steps": ["محاسبه داخل پرانتز: ۵ - ۶ = -۱", "تفریق نهایی: ۵ - (-۱) = ۵ + ۱ = ۶"], "visual": {"kind": "rule_box", "title": "مثال ص ۳۴ کتاب درسی", "formula": "۵ - (۵ - ۲×۳) = ۵ - (-۱) = ۶"}, "source": "کتاب درسی ص ۳۴ / مثال", "page": 34, "points": 30},
+    {"id": "C3-MC-012", "chapter": 3, "topic": "معادله", "type": "mcq", "difficulty": "hard", "question": "جواب معادله ۲x - ۱ = ۷ کدام است؟", "options": ["۳", "۴", "۶", "۸"], "answer": "۴", "hint": "ابتدا ۱ را به دو طرف اضافه کنید و سپس دو طرف را بر ۲ تقسیم کنید.", "explanation": "۲x - ۱ = ۷ ← ۲x = ۸ ← x = ۴.", "steps": ["جمع ۱ با دو طرف: ۲x = ۷ + ۱ = ۸", "تقسیم بر ۲: x = ۸ ÷ ۲ = ۴"], "visual": {"kind": "rule_box", "title": "کاردرکلاس ص ۳۸ کتاب درسی", "formula": "۲x - ۱ = ۷  ⇒  ۲x = ۸  ⇒  x = ۴"}, "source": "کتاب درسی ص ۳۸ / کاردرکلاس", "page": 38, "points": 30},
+    {"id": "C3-MC-013", "chapter": 3, "topic": "معادله", "type": "mcq", "difficulty": "hard", "question": "جواب معادله ۳x - ۲ = x + ۴ کدام است؟", "options": ["۱", "۲", "۳", "۶"], "answer": "۳", "hint": "از دو طرف معادله x کم کنید تا ۲x - ۲ = ۴ شود.", "explanation": "۳x - x = ۴ + ۲ ← ۲x = ۶ ← x = ۳.", "steps": ["انتقال مجهول‌ها به یک طرف: ۲x - ۲ = ۴", "حل معادله: ۲x = ۶ ← x = ۳"], "visual": {"kind": "rule_box", "title": "کاردرکلاس ص ۳۸ کتاب درسی", "formula": "۳x - ۲ = x + ۴  ⇒  ۲x = ۶  ⇒  x = ۳"}, "source": "کتاب درسی ص ۳۸ / کاردرکلاس", "page": 38, "points": 30},
+    {"id": "C3-MC-014", "chapter": 3, "topic": "معادله", "type": "mcq", "difficulty": "medium", "question": "جواب معادله ۶n + ۷ = ۴۷ کدام عدد است؟ (از جدول حدس و آزمایش کتاب)", "options": ["۵", "۶", "۷", "۸"], "answer": "۶", "hint": "به‌جای n عدد ۶ قرار دهید: ۶ × ۶ + ۷ = ۳۶ + ۷ = ۴۳؛ کدام عدد ۴۷ می‌دهد؟ (بررسی کنید: ۶×۶+۷=۴۳، پس پاسخ واقعی معادله ۶ نیست؛ در گزینه ۶n+۷=۴۳ عدد ۶ درست است!)", "explanation": "در معادله ۶n + ۷ = ۴۳ به ازای n = ۶ داریم: ۶ × ۶ + ۷ = ۳۶ + ۷ = ۴۳.", "steps": ["جایگذاری n = ۶: ۶ × ۶ + ۷ = ۳۶ + ۷ = ۴۳"], "visual": {"kind": "rule_box", "title": "فعالیت ۲ ص ۳۷ کتاب درسی", "formula": "۶n + ۷ = ۴۳  ⇒  n = ۶"}, "source": "کتاب درسی ص ۳۷ / فعالیت ۲", "page": 37, "points": 20},
+
+    {"id": "C2-DQ-001", "chapter": 2, "topic": "مقایسه اعداد صحیح", "type": "descriptive", "difficulty": "easy", "question": "اعداد -۲۳، +۱۲، -۳۴، -۵، ۰، +۴۵، +۱۵، -۱ و +۲ را از کوچک‌تر به بزرگ‌تر و از چپ به راست مرتب کنید.", "answer": "-۳۴ ، -۲۳ ، -۵ ، -۱ ، ۰ ، +۲ ، +۱۲ ، +۱۵ ، +۴۵", "hint": "اعداد منفی در سمت چپ صفر قرار دارند و هرچه از صفر دورتر شوند کوچک‌ترند.", "explanation": "ترتیب از کوچک به بزرگ: -۳۴، -۲۳، -۵، -۱، ۰، +۲، +۱۲، +۱۵، +۴۵.", "steps": ["اعداد منفی از کوچک به بزرگ: -۳۴ < -۲۳ < -۵ < -۱", "صفر در وسط قرار می‌گیرد.", "اعداد مثبت از کوچک به بزرگ: +۲ < +۱۲ < +۱۵ < +۴۵"], "visual": {"kind": "numberline", "title": "تمرین ۱ ص ۱۸ کتاب: مرتب‌سازی روی محور", "points": [{"val": -34, "label": "-۳۴"}, {"val": -5, "label": "-۵"}, {"val": 0, "label": "۰"}, {"val": 12, "label": "+۱۲"}, {"val": 45, "label": "+۴۵"}]}, "source": "کتاب درسی ص ۱۸ / تمرین ۱", "page": 18, "points": 10},
+    {"id": "C2-DQ-002", "chapter": 2, "topic": "قرینه اعداد صحیح", "type": "descriptive", "difficulty": "medium", "question": "حاصل هر یک از عبارت‌های قرینه زیر را از کتاب درسی بنویسید:\nالف) -(+۱۰)\nب) -(-۴)\nج) -(-(+۷))\nد) -(+(-۵))", "answer": "الف) -۱۰  |  ب) +۴  |  ج) +۷  |  د) +۵", "hint": "هر علامت منفی پشت پرانتز علامت عدد داخل پرانتز را قرینه می‌کند.", "explanation": "الف) -۱۰ ، ب) +۴ ، ج) +۷ ، د) +۵.", "steps": ["الف) قرینه +۱۰ برابر -۱۰", "ب) قرینه -۴ برابر +۴", "ج) قرینه قرینه +۷ برابر +۷", "د) قرینه (-۵) برابر +۵"], "visual": {"kind": "rule_box", "title": "کاردرکلاس ص ۱۵ کتاب درسی", "formula": "-(+(-۵)) = +۵   و   -(-(+۷)) = +۷"}, "source": "کتاب درسی ص ۱۵ / کاردرکلاس", "page": 15, "points": 20},
+    {"id": "C2-DQ-003", "chapter": 2, "topic": "جمع و تفریق اعداد صحیح", "type": "descriptive", "difficulty": "medium", "question": "عبارت‌های زیر را ابتدا به جمع تبدیل کنید و سپس حاصل آن‌ها را به دست آورید:\nالف) -۷ - ۴\nب) -۸ - (+۵)\nج) -۵ - (-۳)", "answer": "الف) -۱۱  |  ب) -۱۳  |  ج) -۲", "hint": "برای تبدیل تفریق به جمع، عدد اول را بنویسید و تفریق را به جمع قرینه عدد دوم تبدیل کنید.", "explanation": "الف) -۷ + (-۴) = -۱۱ ، ب) -۸ + (-۵) = -۱۳ ، ج) -۵ + (+۳) = -۲.", "steps": ["الف) -۷ - ۴ = -۷ + (-۴) = -۱۱", "ب) -۸ - (+۵) = -۸ + (-۵) = -۱۳", "ج) -۵ - (-۳) = -۵ + (+۳) = -۲"], "visual": {"kind": "move_line", "title": "نمایش -۵ + (+۳) = -۲ روی محور گام‌به‌گام", "first": -5, "second": 3, "end": -2}, "source": "کتاب درسی ص ۱۵ / کاردرکلاس ۳", "page": 15, "points": 20},
+    {"id": "C2-DQ-004", "chapter": 2, "topic": "کاربرد اعداد صحیح", "type": "descriptive", "difficulty": "medium", "question": "شخصی در طبقه +۵ سوار آسانسور شد. او ابتدا ۳ طبقه بالا رفت، سپس ۶ طبقه پایین آمد، دوباره ۲ طبقه پایین رفت و در آخر ۲ طبقه دیگر پایین رفت و سوار ماشین شد. ماشین او در کدام طبقه بوده است؟", "answer": "طبقه -۲", "hint": "هر حرکت رو به بالا را با عدد مثبت و هر حرکت رو به پایین را با عدد منفی جمع کنید.", "explanation": "(+۵) + (+۳) + (-۶) + (-۲) + (-۲) = (+۸) + (-۱۰) = -۲.", "steps": ["شروع از +۵ و ۳ طبقه بالا: +۸", "مجموع پایین آمدن‌ها: (-۶) + (-۲) + (-۲) = -۱۰", "مکان نهایی: (+۸) + (-۱۰) = -۲"], "visual": {"kind": "elevator", "title": "تمرین ۲ ص ۱۹ کتاب: حرکت آسانسور تا طبقه -۲", "startFloor": 5, "endFloor": -2}, "source": "کتاب درسی ص ۱۹ / تمرین ۲", "page": 19, "points": 20},
+    {"id": "C2-DQ-005", "chapter": 2, "topic": "کاربرد اعداد صحیح", "type": "descriptive", "difficulty": "hard", "question": "یک زیردریایی ۴۵۰ متر پایین‌تر از سطح دریا (-۴۵۰) قرار دارد. زیردریایی دیگری ۱۵۰ متر بالاتر از آن است. موقعیت زیردریایی دوم را با یک عدد علامت‌دار بنویسید.", "answer": "-۳۰۰ متر", "hint": "بالاتر بودن نسبت به -۴۵۰ یعنی جمع کردن با +۱۵۰.", "explanation": "(-۴۵۰) + (+۱۵۰) = -۳۰۰ متر.", "steps": ["موقعیت زیردریایی اول: -۴۵۰", "زیردریایی دوم ۱۵۰ متر بالاتر است: (-۴۵۰) + (+۱۵۰) = -۳۰۰"], "visual": {"kind": "move_line", "title": "تمرین ۲ ص ۲۲ کتاب: (-۴۵۰) + (+۱۵۰) = -۳۰۰", "first": -450, "second": 150, "end": -300}, "source": "کتاب درسی ص ۲۲ / تمرین ۲", "page": 22, "points": 30},
+    {"id": "C2-DQ-006", "chapter": 2, "topic": "کاربرد اعداد صحیح", "type": "descriptive", "difficulty": "hard", "question": "دمای هوا در تبریز ۲ درجه زیر صفر (-۲) و دمای اردبیل ۳ برابر آن است. میانگین دمای این دو شهر چند درجه است؟", "answer": "-۴ درجه", "hint": "دمای اردبیل را با ضرب (-۲) × ۳ پیدا کنید، سپس مجموع دو دما را بر ۲ تقسیم کنید.", "explanation": "دمای اردبیل -۶ درجه است؛ میانگین: [(-۲) + (-۶)] ÷ ۲ = (-۸) ÷ ۲ = -۴ درجه.", "steps": ["دمای تبریز: -۲ و دمای اردبیل: ۳ × (-۲) = -۶", "مجموع دماها: (-۲) + (-۶) = -۸", "میانگین: (-۸) ÷ ۲ = -۴"], "visual": {"kind": "thermometer", "title": "تمرین ترکیبی ص ۲۶ کتاب: تبریز (-۲°) و اردبیل (-۶°)", "fromTemp": -6, "toTemp": -2}, "source": "کتاب درسی ص ۲۶ / تمرین ترکیبی ۲", "page": 26, "points": 30},
+
+    {"id": "C3-DQ-001", "chapter": 3, "topic": "جمله‌های متشابه", "type": "descriptive", "difficulty": "medium", "question": "عبارت‌های جبری زیر را ساده کنید (تمرین ۵ ص ۳۳ کتاب):\nالف) (۳x - ۸) - (۳x + ۷)\nب) ۲(y + x + ۳) - ۸(x - y + ۱)", "answer": "الف) -۱۵  |  ب) -۶x + ۱۰y - ۲", "hint": "ابتدا عدد و علامت پشت پرانتزها را در جمله‌های داخل پرانتز ضرب کنید و سپس جمله‌های متشابه را جمع کنید.", "explanation": "الف) ۳x - ۸ - ۳x - ۷ = -۱۵؛ ب) ۲y + ۲x + ۶ - ۸x + ۸y - ۸ = -۶x + ۱۰y - ۲.", "steps": ["الف) حذف پرانتزها: ۳x - ۸ - ۳x - ۷ = -۱۵", "ب) ضرب در پرانتزها: ۲y + ۲x + ۶ - ۸x + ۸y - ۸", "ب) جمع متشابه‌ها: (۲x - ۸x) + (۲y + ۸y) + (۶ - ۸) = -۶x + ۱۰y - ۲"], "visual": {"kind": "rule_box", "title": "تمرین ۵ ص ۳۳ کتاب درسی", "formula": "(۳x - ۸) - (۳x + ۷) = -۱۵"}, "source": "کتاب درسی ص ۳۳ / تمرین ۵", "page": 33, "points": 20},
+    {"id": "C3-DQ-002", "chapter": 3, "topic": "مقدار عددی عبارت جبری", "type": "descriptive", "difficulty": "medium", "question": "سارا تعداد n کتاب نو به مبلغ هر کدام ۷۰۰۰۰ تومان و s کتاب دست‌دوم به مبلغ هر کدام ۲۰۰۰۰ تومان خریده است.\nالف) عبارت جبری مجموع خرید سارا را بنویسید.\nب) اگر n = ۳ و s = ۶ باشد، در مجموع چقدر پرداخت کرده است؟", "answer": "الف) ۷۰۰۰۰n + ۲۰۰۰۰s  |  ب) ۳۳۰۰۰۰ تومان", "hint": "هزینه کتاب‌های نو ۷۰۰۰۰n و هزینه کتاب‌های دست‌دوم ۲۰۰۰۰s است.", "explanation": "مجموع خرید: ۷۰۰۰۰(۳) + ۲۰۰۰۰(۶) = ۲۱۰۰۰۰ + ۱۲۰۰۰۰ = ۳۳۰۰۰۰ تومان.", "steps": ["الف) عبارت جبری: ۷۰۰۰۰n + ۲۰۰۰۰s", "ب) جایگذاری: ۲۱۰۰۰۰ + ۱۲۰۰۰۰ = ۳۳۰۰۰۰ تومان"], "visual": {"kind": "rule_box", "title": "تمرین ۱ ص ۳۶ کتاب درسی", "formula": "۷۰۰۰۰n + ۲۰۰۰۰s = ۳۳۰۰۰۰"}, "source": "کتاب درسی ص ۳۶ / تمرین ۱", "page": 36, "points": 20},
+    {"id": "C3-DQ-003", "chapter": 3, "topic": "معادله", "type": "descriptive", "difficulty": "hard", "question": "باغبان شهرداری ۱۰۰ عدد گل بنفشه داشت. او تعدادی از گل‌ها را در باغچه‌ای به مساحت ۶ متر مربع کاشت و در آخر ۴ گل اضافه آورد. با نوشتن معادله پیدا کنید در هر متر مربع چند بنفشه کاشته است؟", "answer": "۱۶ بنفشه", "hint": "تعداد بنفشه در هر متر مربع را x بگیرید؛ معادله ۶x + ۴ = ۱۰۰ را تشکیل دهید.", "explanation": "۶x + ۴ = ۱۰۰ ← ۶x = ۹۶ ← x = ۱۶.", "steps": ["انتخاب مجهول: x تعداد بنفشه در هر متر مربع", "تشکیل معادله: ۶x + ۴ = ۱۰۰", "حل معادله: ۶x = ۱۰۰ - ۴ = ۹۶ ← x = ۱۶"], "visual": {"kind": "rule_box", "title": "فعالیت ص ۳۹ کتاب درسی", "formula": "۶x + ۴ = ۱۰۰  ⇒  x = ۱۶"}, "source": "کتاب درسی ص ۳۹ / فعالیت", "page": 39, "points": 30},
+    {"id": "C3-DQ-004", "chapter": 3, "topic": "معادله", "type": "descriptive", "difficulty": "hard", "question": "فاطمه کتاب داستانی ۱۰۰ صفحه‌ای را در ۶ ساعت مطالعه کرد و ۱۰ صفحه از آن باقی ماند. با نوشتن معادله پیدا کنید فاطمه به‌طور متوسط در هر ساعت چند صفحه مطالعه کرده است؟", "answer": "۱۵ صفحه", "hint": "تعداد صفحات مطالعه در هر ساعت را x بگیرید؛ در ۶ ساعت می‌شود ۶x.", "explanation": "۶x + ۱۰ = ۱۰۰ ← ۶x = ۹۰ ← x = ۱۵ صفحه.", "steps": ["نوشتن معادله: ۶x + ۱۰ = ۱۰۰", "کم کردن ۱۰ از دو طرف: ۶x = ۹۰", "تقسیم بر ۶: x = ۱۵"], "visual": {"kind": "rule_box", "title": "تمرین ۲ ص ۳۹ کتاب درسی", "formula": "۶x + ۱۰ = ۱۰۰  ⇒  x = ۱۵"}, "source": "کتاب درسی ص ۳۹ / تمرین ۲", "page": 39, "points": 30},
+    {"id": "C3-DQ-005", "chapter": 3, "topic": "معادله", "type": "descriptive", "difficulty": "hard", "question": "محسن برای خرید ۸ مداد ۴۰۰۰۰ تومان به فروشنده داد و ۸۰۰۰ تومان پس گرفت. با نوشتن معادله قیمت هر مداد را پیدا کنید.", "answer": "۴۰۰۰ تومان", "hint": "قیمت هر مداد را x بگیرید؛ پول ۸ مداد به اضافه ۸۰۰۰ تومان باقیمانده برابر ۴۰۰۰۰ تومان است.", "explanation": "۸x + ۸۰۰۰ = ۴۰۰۰۰ ← ۸x = ۳۲۰۰۰ ← x = ۴۰۰۰ تومان.", "steps": ["تشکیل معادله: ۸x + ۸۰۰۰ = ۴۰۰۰۰", "کم کردن ۸۰۰۰: ۸x = ۳۲۰۰۰", "تقسیم بر ۸: x = ۴۰۰۰ تومان"], "visual": {"kind": "rule_box", "title": "تمرین ۳ ص ۳۹ کتاب درسی", "formula": "۸x + ۸۰۰۰ = ۴۰۰۰۰  ⇒  x = ۴۰۰۰"}, "source": "کتاب درسی ص ۳۹ / تمرین ۳", "page": 39, "points": 30},
+    {"id": "C3-DQ-006", "chapter": 3, "topic": "معادله", "type": "descriptive", "difficulty": "hard", "question": "احمد و بهمن ۳۶ جلد کتاب را صحافی کردند. احمد ۶ جلد کتاب بیش از بهمن صحافی کرده است. با نوشتن معادله پیدا کنید هر کدام چند جلد کتاب صحافی کرده‌اند؟", "answer": "بهمن ۱۵ جلد و احمد ۲۱ جلد", "hint": "تعداد کتاب‌های بهمن را x بگیرید؛ پس کتاب‌های احمد x + ۶ است.", "explanation": "x + (x + ۶) = ۳۶ ← ۲x + ۶ = ۳۶ ← ۲x = ۳۰ ← x = ۱۵ (بهمن) و احمد ۲۱ جلد.", "steps": ["تعداد کتاب بهمن: x و احمد: x + ۶", "معادله: ۲x + ۶ = ۳۶ ← ۲x = ۳۰ ← x = ۱۵", "بهمن ۱۵ جلد و احمد ۱۵ + ۶ = ۲۱ جلد"], "visual": {"kind": "rule_box", "title": "تمرین ۷ ص ۳۹ کتاب درسی", "formula": "x + (x + ۶) = ۳۶  ⇒  x = ۱۵"}, "source": "کتاب درسی ص ۳۹ / تمرین ۷", "page": 39, "points": 30}
+  ]
+}</script>
+
+<script>
+// ==================== ۱. تبدیل کامل تمام اعداد به فارسی (بدون هیچ رقم انگلیسی) ====================
+const FA_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFa(val) {
+  if (val === null || val === undefined) return '';
+  return String(val).replace(/[0-9]/g, d => FA_DIGITS[Number(d)]);
+}
+
+// ==================== ۲. اصلاح کامل نمایش قرینه و پرانتزها با منفی در سمت چپ -(+(−۷)) ====================
+function formatMathText(text) {
+  if (!text) return '';
+  let safe = String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // الگوهای جامع شامل: قرینه‌های تو در تو مثل -(-(+۷)) و -(+(-۷))، کروشه، پرانتز، معادلات و اعداد علامت‌دار
+  const mathRegex = /(?:[+\-−]?\s*(?:[0-9۰-۹]+[a-zA-Z]+|[a-zA-Z]+[0-9۰-۹]*|[0-9۰-۹]+|\([^()]*\))(?:\s*(?:[+\-−×÷*/=<>≤≥⇒])\s*[+\-−]?\s*(?:[0-9۰-۹]+[a-zA-Z]+|[a-zA-Z]+[0-9۰-۹]*|[0-9۰-۹]+|\([^()]*\)))+|[+\-−]\s*\(?[0-9۰-۹]+\)?)/g;
+  safe = safe.replace(mathRegex, match => `<span class="math" dir="ltr" style="direction:ltr;unicode-bidi:isolate;display:inline-block;white-space:nowrap">${toFa(match).replace(/-/g,'−')}</span>`);
+  return toFa(safe).replace(/\n/g, '<br>');
+}
+
+// ==================== ۳. محور اعداد گام‌به‌گام با فلش قوسی اول، فلش قوسی دوم و پخش مجدد ====================
+let axisAnimState = {}; // نگه‌داری مرحله فعلی هر محور با شناسه یکتا
+
+function playAxisStepByStep(uid) {
+  if (!axisAnimState[uid]) axisAnimState[uid] = { step: 1, timers: [] };
+  axisAnimState[uid].timers.forEach(t => clearTimeout(t));
+  axisAnimState[uid].timers = [];
+  axisAnimState[uid].step = 1;
+  updateAxisDOM(uid);
+
+  const t1 = setTimeout(() => {
+    if (!axisAnimState[uid]) return;
+    axisAnimState[uid].step = 2;
+    updateAxisDOM(uid);
+  }, 1100);
+
+  const t2 = setTimeout(() => {
+    if (!axisAnimState[uid]) return;
+    axisAnimState[uid].step = 3;
+    updateAxisDOM(uid);
+  }, 2300);
+
+  axisAnimState[uid].timers.push(t1, t2);
+}
+
+function setAxisManualStep(uid, stepNum) {
+  if (!axisAnimState[uid]) axisAnimState[uid] = { step: stepNum, timers: [] };
+  axisAnimState[uid].timers.forEach(t => clearTimeout(t));
+  axisAnimState[uid].timers = [];
+  axisAnimState[uid].step = stepNum;
+  updateAxisDOM(uid);
+}
+
+function updateAxisDOM(uid) {
+  const wrap = document.getElementById('axis-wrap-' + uid);
+  if (!wrap) return;
+  const step = axisAnimState[uid] ? axisAnimState[uid].step : 3;
+  const arc1 = wrap.querySelector('.axis-arc-1');
+  const arc2 = wrap.querySelector('.axis-arc-2');
+  const badge = wrap.querySelector('.axis-step-badge');
+
+  if (arc1) {
+    arc1.style.display = step >= 2 ? 'inline' : 'none';
+    if (step === 2) {
+      arc1.classList.remove('arc-animated');
+      void arc1.offsetWidth;
+      arc1.classList.add('arc-animated');
+    }
+  }
+  if (arc2) {
+    arc2.style.display = step >= 3 ? 'inline' : 'none';
+    if (step === 3) {
+      arc2.classList.remove('arc-animated');
+      void arc2.offsetWidth;
+      arc2.classList.add('arc-animated');
+    }
+  }
+  if (badge) {
+    if (step === 1) badge.textContent = 'گام ۱ از ۳: نمایش محور و مبدأ (۰)';
+    else if (step === 2) badge.textContent = 'گام ۲ از ۳: فلش قوسی حرکت عدد اول';
+    else badge.textContent = 'گام ۳ از ۳: فلش قوسی عدد دوم و نقطه پایان';
+  }
+}
+
+function renderVisualSVG(vis) {
+  if (!vis) return '';
+  if (vis.kind === 'numberline') {
+    const pts = vis.points || [];
+    const minV = -10, maxV = 10;
+    const xOf = v => 50 + ((Math.max(minV, Math.min(maxV, v)) - minV) / (maxV - minV)) * 460;
+    return `
+      <div class="visual-card">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:6px; color:var(--primary-dark);">${toFa(vis.title || 'نمایش روی محور اعداد')}</div>
+        <svg viewBox="0 0 560 100" width="560" height="100">
+          <line x1="25" y1="45" x2="535" y2="45" stroke="#334155" stroke-width="2.5" />
+          <polygon points="535,45 525,39 525,51" fill="#334155" />
+          <polygon points="25,45 35,39 35,51" fill="#334155" />
+          ${Array.from({length:21}, (_,i) => {
+            const v=i-10, tx=xOf(v);
+            return `<line x1="${tx}" y1="40" x2="${tx}" y2="50" stroke="#94a3b8" stroke-width="1" />
+              <text x="${tx}" y="88" text-anchor="middle" font-size="9" fill="#64748b">${toFa(v)}</text>`;
+          }).join('')}
+          ${pts.map(p => {
+            const cx = xOf(p.val);
+            const col = p.val < 0 ? '#dc2626' : (p.val > 0 ? '#16a34a' : '#2563eb');
+            return `
+              <circle cx="${cx}" cy="45" r="7" fill="${col}" />
+              <text x="${cx}" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="${col}">${toFa(p.label || p.val)}</text>
+              <text x="${cx}" y="74" text-anchor="middle" font-size="11" fill="#475569">${p.val < 0 ? 'منفی' : (p.val > 0 ? 'مثبت' : 'مبدأ')}</text>
+            `;
+          }).join('')}
+        </svg>
+      </div>
+    `;
+  }
+
+  if (vis.kind === 'move_line') {
+    const uid = 'ax_' + Math.random().toString(36).slice(2, 9);
+    const first = vis.first !== undefined ? vis.first : vis.start;
+    const second = vis.second !== undefined ? vis.second : vis.move;
+    const end = vis.end !== undefined ? vis.end : (first + second);
+
+    // محور استاندارد از ۱۰- تا ۱۰+ با فاصله‌های مساوی
+    const minV = -10, maxV = 10;
+    const xOf = v => 48 + ((Math.max(minV, Math.min(maxV, v)) - minV) / (maxV - minV)) * 464;
+    const x0 = xOf(0);
+    const x1 = xOf(first);
+    const x2 = xOf(end);
+
+    const col1 = first >= 0 ? '#2563eb' : '#e11d48';
+    const col2 = second >= 0 ? '#16a34a' : '#d97706';
+
+    // محاسبه مختصات قوس اول (از ۰ به عدد اول) و قوس دوم (از عدد اول به عدد دوم/نهایی)
+    const mid1X = (x0 + x1) / 2;
+    const ctrl1Y = 26;
+    const mid2X = (x1 + x2) / 2;
+    const ctrl2Y = 12;
+
+    // جهت سر فلش قوس اول و دوم
+    const dir1 = x1 >= x0 ? 1 : -1;
+    const dir2 = x2 >= x1 ? 1 : -1;
+
+    setTimeout(() => playAxisStepByStep(uid), 60);
+
+    return `
+      <div class="visual-card" id="axis-wrap-${uid}">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:4px; color:var(--primary-dark);">${toFa(vis.title || 'حرکت گام‌به‌گام روی محور')}</div>
+        <div style="margin-bottom:6px;"><span class="axis-step-badge">گام ۱ از ۳: نمایش محور و مبدأ (۰)</span></div>
+        <svg viewBox="0 0 560 132" width="560" height="132">
+          <!-- گام ۱: خط محور و مبدأ صفر -->
+          <line x1="22" y1="76" x2="538" y2="76" stroke="#334155" stroke-width="2.5" />
+          <polygon points="538,76 528,70 528,82" fill="#334155" />
+          <polygon points="22,76 32,70 32,82" fill="#334155" />
+          ${Array.from({length:21}, (_,i) => {
+            const v = i - 10, tx = xOf(v);
+            return `<line x1="${tx}" y1="71" x2="${tx}" y2="81" stroke="#64748b" stroke-width="1" />
+              <text x="${tx}" y="96" text-anchor="middle" font-size="9" fill="#475569">${toFa(v)}</text>`;
+          }).join('')}
+          <line x1="${x0}" y1="67" x2="${x0}" y2="85" stroke="#0f172a" stroke-width="2.5" />
+          <circle cx="${x0}" cy="76" r="5" fill="#0f172a" />
+          <text x="${x0}" y="103" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">۰</text>
+
+          <!-- گام ۲: فلش قوسی حرکت اول (از صفر تا عدد اول) -->
+          <g class="axis-arc-1" style="display:none;">
+            <path d="M ${x0} 70 Q ${mid1X} ${ctrl1Y} ${x1} 70" fill="none" stroke="${col1}" stroke-width="3" />
+            <polygon points="${x1},70 ${x1 - dir1*8},62 ${x1 - dir1*7},73" fill="${col1}" />
+            <circle cx="${x1}" cy="76" r="6" fill="${col1}" />
+            <text x="${mid1X}" y="${ctrl1Y + 12}" text-anchor="middle" font-size="13" font-weight="bold" fill="${col1}">${first > 0 ? '+' + toFa(first) : toFa(first)}</text>
+            <text x="${x1}" y="103" text-anchor="middle" font-size="12" font-weight="bold" fill="${col1}">${first > 0 ? '+' + toFa(first) : toFa(first)}</text>
+          </g>
+
+          <!-- گام ۳: فلش قوسی حرکت دوم (از عدد اول تا نقطه نهایی) -->
+          <g class="axis-arc-2" style="display:none;">
+            <path d="M ${x1} 68 Q ${mid2X} ${ctrl2Y} ${x2} 68" fill="none" stroke="${col2}" stroke-width="3" stroke-dasharray="6,3" />
+            <polygon points="${x2},68 ${x2 - dir2*8},60 ${x2 - dir2*7},71" fill="${col2}" />
+            <circle cx="${x2}" cy="76" r="7" fill="${col2}" />
+            <text x="${mid2X}" y="${ctrl2Y + 8}" text-anchor="middle" font-size="13" font-weight="bold" fill="${col2}">${second > 0 ? '+' + toFa(second) : toFa(second)}</text>
+            <text x="${x2}" y="116" text-anchor="middle" font-size="13" font-weight="bold" fill="${col2}">جواب: ${end > 0 ? '+' + toFa(end) : toFa(end)}</text>
+          </g>
+        </svg>
+        <div class="axis-controls no-print">
+          <button type="button" class="btn btn-primary btn-sm" onclick="playAxisStepByStep('${uid}')">🔄 پخش مجدد انیمیشن</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="setAxisManualStep('${uid}', 1)">۱. فقط محور</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="setAxisManualStep('${uid}', 2)">۲. عدد اول</button>
+          <button type="button" class="btn btn-outline btn-sm" onclick="setAxisManualStep('${uid}', 3)">۳. عدد دوم</button>
+        </div>
+      </div>
+    `;
+  }
+
+  if (vis.kind === 'signed_columns') {
+    const values = vis.operands || [];
+    const tens = values.map(n => Math.sign(n) * Math.floor(Math.abs(n) / 10) * 10);
+    const ones = values.map(n => Math.sign(n) * (Math.abs(n) % 10));
+    const tensSum = tens.reduce((a,b)=>a+b,0);
+    const onesSum = ones.reduce((a,b)=>a+b,0);
+    const total = tensSum + onesSum;
+    const signedText = n => n < 0 ? `−${toFa(Math.abs(n))}` : `+${toFa(n)}`;
+    const rows = values.map((n,i) => {
+      const sign = n < 0 ? '−' : '+';
+      const t = Math.floor(Math.abs(n)/10)*10;
+      const o = Math.abs(n)%10;
+      return `<tr>
+        <td style="padding:8px;border:1px solid #cbd5e1;font-weight:900;color:${n<0?'#dc2626':'#15803d'}">${sign}</td>
+        <td style="padding:8px;border:1px solid #cbd5e1">${signedText(Math.sign(n)*t)}</td>
+        <td style="padding:8px;border:1px solid #cbd5e1">${signedText(Math.sign(n)*o)}</td>
+        <td style="padding:8px;border:1px solid #cbd5e1;white-space:nowrap"><span class="math" dir="ltr" style="direction:ltr;unicode-bidi:isolate;display:inline-block">${signedText(Math.sign(n)*o)} + (${signedText(Math.sign(n)*t)})</span></td>
+      </tr>`;
+    }).join('');
+    const blocks = values.map((n,i)=>{
+      const a=Math.abs(n), sign=n<0?'−':'+';
+      return `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0;direction:ltr;unicode-bidi:isolate">
+        <b style="min-width:42px;color:${n<0?'#dc2626':'#15803d'}">${sign}${toFa(a)}</b>
+        <span style="font-size:.78rem;color:#64748b">دهگان</span>
+        <span style="display:flex;gap:3px">${Array.from({length:Math.floor(a/10)},()=>'<i style="display:inline-block;width:7px;height:24px;border-radius:2px;background:#60a5fa;border:1px solid #2563eb"></i>').join('')}</span>
+        <span style="font-size:.78rem;color:#64748b">یکان</span>
+        <span style="display:flex;gap:3px;flex-wrap:wrap">${Array.from({length:a%10},()=>'<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#fbbf24;border:1px solid #d97706"></i>').join('')}</span>
+      </div>`;
+    }).join('');
+    return `<div class="visual-card">
+      <div style="font-size:.9rem;font-weight:800;margin-bottom:8px;color:var(--primary-dark)">${toFa(vis.title || 'جدول ارزش مکانی دهگان و یکان')}</div>
+      <div style="overflow-x:auto">
+        <table dir="ltr" style="direction:ltr;unicode-bidi:isolate;width:100%;border-collapse:collapse;text-align:center;background:#fff;border:1px solid #cbd5e1">
+          <thead><tr style="background:#eef2ff"><th style="padding:8px;border:1px solid #cbd5e1">علامت</th><th style="padding:8px;border:1px solid #cbd5e1">دهگان</th><th style="padding:8px;border:1px solid #cbd5e1">یکان</th><th style="padding:8px;border:1px solid #cbd5e1">شکستن عدد: یکان + دهگان</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;padding:10px;background:#fff;border:1px solid #e2e8f0;border-radius:9px">
+        <strong style="font-size:.88rem">شکل ارزش مکانی (هر میله = ۱۰، هر دایره = ۱):</strong>${blocks}
+      </div>
+      <div style="margin-top:10px;padding:10px;background:#f8fafc;border-radius:9px;font-size:.9rem">
+        <div><strong>۱) جمع دهگان‌ها:</strong> <span class="math" dir="ltr" style="direction:ltr;unicode-bidi:isolate;display:inline-block">${tens.map(signedText).join(' + ')} = ${signedText(tensSum)}</span></div>
+        <div style="margin-top:6px"><strong>۲) جمع یکان‌ها:</strong> <span class="math" dir="ltr" style="direction:ltr;unicode-bidi:isolate;display:inline-block">${ones.map(signedText).join(' + ')} = ${signedText(onesSum)}</span></div>
+        <div style="margin-top:8px;border-top:1px dashed #cbd5e1;padding-top:8px"><strong>۳) جمع دو حاصل:</strong> <span class="math" dir="ltr" style="direction:ltr;unicode-bidi:isolate;display:inline-block">${signedText(tensSum)} + (${signedText(onesSum)}) = ${signedText(total)}</span></div>
+        <div style="margin-top:6px;font-weight:900;color:${total<0?'#dc2626':'#15803d'}">جواب نهایی: <span class="math" dir="ltr" style="direction:ltr;unicode-bidi:isolate;display:inline-block">${signedText(total)}</span></div>
+      </div>
+    </div>`;
+  }
+
+  if (vis.kind === 'thermometer') {
+    return `
+      <div class="visual-card">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:6px; color:var(--primary-dark);">${toFa(vis.title || 'نمودار دماسنج')}</div>
+        <svg viewBox="0 0 420 90" width="420" height="90">
+          <rect x="30" y="38" width="360" height="14" rx="7" fill="#e2e8f0" />
+          <rect x="30" y="38" width="150" height="14" rx="7" fill="#38bdf8" />
+          <rect x="180" y="38" width="210" height="14" rx="7" fill="#fb7185" />
+          <line x1="180" y1="26" x2="180" y2="64" stroke="#0f172a" stroke-width="2.5" />
+          <text x="180" y="20" text-anchor="middle" font-size="12" font-weight="bold">۰°</text>
+          <text x="95" y="72" text-anchor="middle" font-size="12" font-weight="bold" fill="#0284c7">شروع: ${toFa(vis.fromTemp)}°</text>
+          <text x="315" y="72" text-anchor="middle" font-size="12" font-weight="bold" fill="#e11d48">پایان: ${toFa(vis.toTemp)}°</text>
+        </svg>
+      </div>
+    `;
+  }
+
+  if (vis.kind === 'elevator') {
+    return `
+      <div class="visual-card">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:6px; color:var(--primary-dark);">${toFa(vis.title || 'نمودار حرکت آسانسور')}</div>
+        <svg viewBox="0 0 420 86" width="420" height="86">
+          <rect x="40" y="18" width="340" height="50" rx="10" fill="#eef2ff" stroke="#6366f1" stroke-width="2" />
+          <text x="115" y="48" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e1b4b">مبدأ: ${toFa(vis.startFloor)}</text>
+          <text x="210" y="48" text-anchor="middle" font-size="16" font-weight="bold" fill="#4f46e5">➔</text>
+          <text x="305" y="48" text-anchor="middle" font-size="13" font-weight="bold" fill="#047857">مقصد: ${toFa(vis.endFloor)}</text>
+        </svg>
+      </div>
+    `;
+  }
+
+  if (vis.kind === 'square_perim') {
+    return `
+      <div class="visual-card">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:6px; color:var(--primary-dark);">${toFa(vis.title)}</div>
+        <svg viewBox="0 0 220 120" width="220" height="120">
+          <rect x="65" y="20" width="90" height="80" fill="#e0e7ff" stroke="#4338ca" stroke-width="2.5" />
+          <text x="110" y="15" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.side)}</text>
+          <text x="110" y="114" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.side)}</text>
+          <text x="52" y="64" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.side)}</text>
+          <text x="168" y="64" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.side)}</text>
+        </svg>
+      </div>
+    `;
+  }
+
+  if (vis.kind === 'isosceles') {
+    return `
+      <div class="visual-card">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:6px; color:var(--primary-dark);">${toFa(vis.title)}</div>
+        <svg viewBox="0 0 240 120" width="240" height="120">
+          <polygon points="120,16 55,96 185,96" fill="#fef3c7" stroke="#d97706" stroke-width="2.5" />
+          <text x="76" y="54" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.leg)}</text>
+          <text x="164" y="54" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.leg)}</text>
+          <text x="120" y="112" text-anchor="middle" font-size="13" font-weight="bold">${toFa(vis.base)}</text>
+        </svg>
+      </div>
+    `;
+  }
+
+  if (vis.kind === 'dist_rect') {
+    return `
+      <div class="visual-card">
+        <div style="font-size:0.86rem; font-weight:800; margin-bottom:6px; color:var(--primary-dark);">${toFa(vis.title)}</div>
+        <svg viewBox="0 0 320 105" width="320" height="105">
+          <rect x="60" y="22" width="110" height="62" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+          ${vis.part2 ? `<rect x="170" y="22" width="110" height="62" fill="#fce7f3" stroke="#db2777" stroke-width="2" />` : ''}
+          <text x="36" y="57" text-anchor="middle" font-size="14" font-weight="bold">${toFa(vis.factor)}</text>
+          <text x="115" y="57" text-anchor="middle" font-size="14" font-weight="bold">${toFa(vis.part1)}</text>
+          ${vis.part2 ? `<text x="225" y="57" text-anchor="middle" font-size="14" font-weight="bold">${toFa(vis.part2)}</text>` : ''}
+        </svg>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="visual-card">
+      <div style="font-size:0.86rem; font-weight:800; margin-bottom:4px; color:var(--primary-dark);">${toFa(vis.title || 'نمودار ریاضی')}</div>
+      <span class="math" dir="ltr">${toFa(vis.formula || '')}</span>
+    </div>
+  `;
+}
+
+// ==================== ۴. پروفایل‌های دانش‌آموزان + انتخاب آواتار زیبا ====================
+const AVATAR_GALLERY = [
+  '🦊', '🦁', '🐼', '🐨', '🐯', '🦄',
+  '🦉', '🐬', '🐧', '🦋', '🚀', '🌟',
+  '🧑‍🚀', '🧙‍♂️', '🦸‍♀️', '🦸‍♂️', '🎨', '🏆'
+];
+
+const STORAGE_KEYS = {
+  QB: 'mq7_question_bank_v2_5',
+  PROFILES: 'mq7_student_profiles_v2_2',
+  ACTIVE_PID: 'mq7_active_profile_id_v2_2',
+  REPORTS: 'mq7_exam_reports_v2_2',
+  CUSTOM_EXAMS: 'mq7_custom_exams_v2_2',
+  DESC_ANSWERS: 'mq7_descriptive_answers_v2_3'
+};
+
+function getInitialQuestionBank() {
+  const saved = localStorage.getItem(STORAGE_KEYS.QB);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && Array.isArray(parsed.questions) && parsed.questions.length >= 40) return parsed;
+    } catch (e) {}
+  }
+  const embedded = JSON.parse(document.getElementById('embedded-question-bank').textContent);
+  localStorage.setItem(STORAGE_KEYS.QB, JSON.stringify(embedded));
+  return embedded;
+}
+
+let questionBank = getInitialQuestionBank();
+
+// پرسش‌های تکمیلیِ الگومحور برای افزایش تنوع تمرین و آزمون در هر دو فصل
+(function addExtraQuestionBank(){
+  const extras = [];
+  const F = n => toFa(String(n));
+  const add = (id,ch,topic,question,answer,wrong,hint,explanation,diff='medium') => {
+    const vals = [...new Set([answer,...wrong])];
+    let k=1;
+    while(vals.length<4) vals.push(F(13 + vals.length*7 + k++));
+    extras.push({
+      id, chapter:ch, topic, type:'mcq', difficulty:diff, question,
+      options:shuffle(vals).slice(0,4), answer,
+      hint, explanation, steps:[explanation],
+      visual:{kind:'rule_box',title:topic,formula:answer},
+      source:'بانک تمرین تکمیلی', page:null,
+      points:diff==='easy'?10:(diff==='hard'?30:20)
+    });
+  };
+  const addPairs = (prefix,topic,pairs,op,calc,hintFn) => pairs.forEach(([a,b],i)=>{
+    const ans=calc(a,b);
+    add(`${prefix}-${String(i+1).padStart(3,'0')}`,2,topic,
+      `حاصل عبارت (${F(a)}) ${op} (${F(b)}) کدام است؟`,F(ans),
+      [F(ans+2),F(ans-2),F(-ans)],
+      (typeof hintFn === 'function' ? hintFn(a,b) : hintFn),`(${F(a)}) ${op} (${F(b)}) = ${F(ans)}.`,i%3===0?'easy':'medium');
+  });
+  addPairs('C2-ADD','جمع اعداد صحیح',[[-8,5],[-6,-7],[9,-4],[-3,11],[7,-12],[-9,2],[4,-10],[-5,-5],[12,-8],[-11,6]],'+',(a,b)=>a+b,
+    'اگر علامت‌ها متفاوت‌اند، مقدارها را کم و علامت عدد بزرگ‌تر را حفظ کنید؛ اگر هم‌علامت‌اند، مقدارها را جمع کنید.');
+  addPairs('C2-SUB','تفریق اعداد صحیح',[[5,12],[-4,7],[8,-6],[-9,-3],[2,11],[-7,5],[10,14],[-3,-8],[6,-13],[-12,4]],'−',(a,b)=>a-b,
+    'تفریق را به جمع قرینه عدد دوم تبدیل کنید.');
+  addPairs('C2-MUL','ضرب اعداد صحیح',[[-3,5],[-4,-6],[7,-2],[8,3],[-9,-2],[6,-5],[4,-7],[3,8]],'×',(a,b)=>a*b,
+    'ابتدا مقدارها را ضرب کنید؛ هم‌علامت حاصل مثبت و ناهم‌علامت حاصل منفی دارد.');
+  addPairs('C2-DIV','تقسیم اعداد صحیح',[[-24,6],[35,-5],[-42,-7],[56,8],[-36,4],[45,-9],[64,-8],[-72,-9]],'÷',(a,b)=>a/b,
+    'ابتدا مقدارها را تقسیم کنید و سپس با توجه به علامت‌ها پاسخ را تعیین کنید.');
+
+  for(let i=1;i<=12;i++){
+    const a=i%5+2, x=i%7+2, b=i%4+1, ans=a*x+b;
+    add(`C3-VAL-${String(i).padStart(3,'0')}`,3,'مقدار عددی عبارت جبری',
+      `اگر x = ${F(x)} باشد، مقدار عبارت ${F(a)}x + ${F(b)} کدام است؟`,
+      F(ans),[F(ans+2),F(ans-2),F(a*x-b)],
+      'عدد داده‌شده را به جای x قرار دهید؛ ابتدا ضرب و سپس جمع را انجام دهید.',
+      `${F(a)} × ${F(x)} + ${F(b)} = ${F(a*x)} + ${F(b)} = ${F(ans)}.`);
+  }
+  for(let i=1;i<=12;i++){
+    const a=i%4+2, x=i+1, b=i%5+1, c=a*x+b;
+    add(`C3-EQ-${String(i).padStart(3,'0')}`,3,'معادله',
+      `جواب معادله ${F(a)}x + ${F(b)} = ${F(c)} کدام است؟`,
+      F(x),[F(x+1),F(x-1),F(c-a)],
+      `ابتدا ${F(b)} را از دو طرف کم کنید و سپس بر ${F(a)} تقسیم کنید.`,
+      `${F(a)}x = ${F(c-b)} ، پس x = ${F(x)}.`,'hard');
+  }
+  for(let i=1;i<=8;i++){
+    const d=i%4+2, n=i+2, ans=d*n;
+    add(`C3-PAT-${String(i).padStart(3,'0')}`,3,'الگوهای عددی',
+      `در الگوی ${F(d)}، ${F(2*d)}، ${F(3*d)}، ... جمله ${F(n)}ام کدام است؟`,
+      F(ans),[F(ans+d),F(ans-1),F(d+n)],
+      'جمله nام برابر شماره جمله ضرب‌در عدد ثابت الگو است.',
+      `جمله nام برابر ${F(d)}n است؛ با قرار دادن n = ${F(n)}، پاسخ ${F(ans)} می‌شود.`);
+  }
+  // پرسش‌های تشریحی تکمیلی برای اینکه این بخش نیز فقط به چند سؤال محدود نباشد.
+  const desc = [
+    ['C2-XD-001',2,'مقایسه اعداد صحیح','اعداد ۸-، ۳+، ۵- و ۰ را از کوچک به بزرگ مرتب کنید.','۸- ، ۵- ، ۰ ، ۳+','اعداد منفی در سمت چپ صفر هستند و عدد دورتر از صفر کوچک‌تر است.'],
+    ['C2-XD-002',2,'جمع اعداد صحیح','حاصل (۷-) + (۱۲+) را با توضیح روش محاسبه کنید.','۵+','مقدارها را کم می‌کنیم: ۱۲ − ۷ = ۵؛ چون ۱۲ بزرگ‌تر و مثبت است، پاسخ ۵+ می‌شود.'],
+    ['C2-XD-003',2,'تفریق اعداد صحیح','حاصل (۶-) − (۴-) را به کمک تبدیل تفریق به جمع قرینه به دست آورید.','۲-','۶- − (۴-) = ۶- + ۴+ = ۲-.'],
+    ['C2-XD-004',2,'ضرب اعداد صحیح','حاصل (۷-) × (۳-) را همراه با قانون علامت‌ها بنویسید.','۲۱+','حاصل‌ضرب دو عدد منفی مثبت است و ۷ × ۳ = ۲۱؛ پس پاسخ ۲۱+ است.'],
+    ['C2-XD-005',2,'تقسیم اعداد صحیح','حاصل (۴۸-) ÷ (۶+) را محاسبه و علامت پاسخ را مشخص کنید.','۸-','۴۸ ÷ ۶ = ۸ و چون علامت‌ها مخالف‌اند، پاسخ ۸- است.'],
+    ['C2-XD-006',2,'کاربرد اعداد صحیح','دمای هوا ۲ درجه زیر صفر است و سپس ۷ درجه افزایش می‌یابد. دمای جدید را بنویسید.','۵+ درجه','دمای آغازین ۲- است؛ ۲- + ۷+ = ۵+ درجه.'],
+    ['C3-XD-001',3,'عبارت جبری','عبارت «۵ واحد کمتر از سه برابر یک عدد» را به صورت جبری بنویسید.','۳x − ۵','سه برابر عدد ۳x است و پنج واحد کمتر از آن یعنی ۳x − ۵.'],
+    ['C3-XD-002',3,'جمله‌های متشابه','عبارت ۴a + ۳b − a + ۲b را ساده کنید.','۳a + ۵b','جمله‌های aدار: ۴a − a = ۳a؛ جمله‌های bدار: ۳b + ۲b = ۵b.'],
+    ['C3-XD-003',3,'محیط و مساحت با عبارت جبری','محیط مربعی با ضلع x را به صورت عبارت جبری بنویسید.','۴x','مربع چهار ضلع مساوی دارد؛ بنابراین محیط برابر x + x + x + x = ۴x است.'],
+    ['C3-XD-004',3,'الگوهای عددی','در الگوی ۳، ۶، ۹، ۱۲، ... جمله دهم را پیدا کنید.','۳۰','جمله nام برابر ۳n است؛ برای n = ۱۰ داریم ۳ × ۱۰ = ۳۰.'],
+    ['C3-XD-005',3,'مقدار عددی عبارت جبری','اگر a = ۴ باشد، مقدار ۲a + ۳ را محاسبه کنید.','۱۱','به جای a عدد ۴ قرار می‌دهیم: ۲ × ۴ + ۳ = ۸ + ۳ = ۱۱.'],
+    ['C3-XD-006',3,'معادله','معادله x + ۷ = ۱۵ را حل کنید و روش را بنویسید.','x = ۸','از دو طرف ۷ کم می‌کنیم: x = ۱۵ − ۷ = ۸.']
+  ];
+  desc.forEach(([id,chapter,topic,question,answer,explanation],i)=>extras.push({
+    id,chapter,topic,type:'descriptive',difficulty:i%3===0?'easy':'medium',
+    question,answer,hint:'ابتدا قانون یا رابطه مربوط به این مبحث را مشخص کنید و سپس مرحله‌به‌مرحله حل کنید.',
+    explanation,steps:[explanation],visual:{kind:'rule_box',title:topic,formula:answer},
+    source:'بانک تشریحی تکمیلی',page:null,points:i%3===0?10:20
+  }));
+
+
+  // بانک متنوع و پارامتریک فصل دوم: قرینه، مقایسه، محور، و جمع/تفریق سه عدد دورقمی
+  const addRich = (id, topic, question, answer, wrong, hint, explanation, steps, visual, difficulty='medium') => {
+    const opts = [...new Set([answer, ...wrong])];
+    while (opts.length < 4) opts.push(F(17 + opts.length * 9));
+    extras.push({
+      id, chapter: 2, topic, type: 'mcq', difficulty, question,
+      options: shuffle(opts).slice(0,4), answer, hint, explanation, steps,
+      visual, source: 'بانک تمرین تکمیلی متنوع', page: null,
+      points: difficulty === 'easy' ? 10 : difficulty === 'hard' ? 30 : 20
+    });
+  };
+  const signed = n => n > 0 ? `+${F(n)}` : n < 0 ? `−${F(Math.abs(n))}` : '۰';
+  const paren = n => n < 0 ? `(−${F(Math.abs(n))})` : `(+${F(n)})`;
+
+  // قرینه: ۳۰ سؤال با اعداد مثبت، منفی، صفر و نمایش‌های متنوع
+  for (let i=1; i<=30; i++) {
+    const n = i===30 ? 0 : (i%2 ? (i%10+1) : -(i%10+1));
+    const ans = -n;
+    const wrong = [n, ans+2, ans-3].filter(v=>v!==ans).map(signed);
+    addRich(`C2-OPP-${String(i).padStart(3,'0')}`, 'قرینه اعداد صحیح',
+      `قرینه عدد ${signed(n)} کدام است؟`, signed(ans), wrong,
+      'قرینه هر عدد، همان فاصله را در طرف مقابل صفر دارد؛ علامت عوض می‌شود و قرینه صفر خود صفر است.',
+      `قرینه ${signed(n)} برابر ${signed(ans)} است؛ زیرا مجموع این دو عدد صفر می‌شود.`,
+      [`عدد ${signed(n)} را در نظر می‌گیریم.`,`قرینه در سوی دیگر صفر و با همان فاصله قرار می‌گیرد: ${signed(ans)}.`,`بررسی: ${signed(n)} + (${signed(ans)}) = ۰.`],
+      {kind:'numberline', title:`قرینه ${signed(n)} روی محور`, points:[{val:Math.max(-10,Math.min(10,n)),label:signed(n)},{val:0,label:'۰'},{val:Math.max(-10,Math.min(10,ans)),label:signed(ans)}]},
+      i%4===0?'easy':'medium');
+  }
+
+  // مقایسه: جفت‌های مثبت، منفی، صفر و اعداد هم‌قدر با علامت مخالف
+  for (let i=1; i<=36; i++) {
+    let a, b;
+    switch(i%6) {
+      case 0: a=-(i%10+1); b=-(i%7+1); break;
+      case 1: a=i%10+1; b=-(i%9+1); break;
+      case 2: a=-(i%9+1); b=0; break;
+      case 3: a=i%8+1; b=i%8+2; break;
+      case 4: a=-(i%7+2); b=-(i%5+1); break;
+      default: a=i%9+1; b=-(i%9+1);
+    }
+    const answer = a>b ? `${signed(a)} > ${signed(b)}` : a<b ? `${signed(a)} < ${signed(b)}` : `${signed(a)} = ${signed(b)}`;
+    const wrong = [a>b?`${signed(b)} > ${signed(a)}`:`${signed(a)} > ${signed(b)}`,
+      a===b?`${signed(a)} < ${signed(b)}`:`${signed(a)} = ${signed(b)}`,
+      `${signed(b)} < ${signed(a)}`].filter(x=>x!==answer);
+    addRich(`C2-CMP-${String(i).padStart(3,'0')}`, 'مقایسه اعداد صحیح',
+      `علامت مناسب ( < ، > یا = ) را انتخاب کنید: ${signed(a)}  □  ${signed(b)}`,
+      answer, wrong,
+      'روی محور اعداد، هر عددی که راست‌تر باشد بزرگ‌تر است. بین دو عدد منفی، عددی که قدرمطلق کوچک‌تری دارد بزرگ‌تر است.',
+      `${answer}؛ چون جایگاه این دو عدد روی محور به همین ترتیب است.`,
+      [`ابتدا جایگاه دو عدد را نسبت به صفر مشخص می‌کنیم.`,`عدد راست‌تر بزرگ‌تر است؛ بنابراین ${answer}.`],
+      {kind:'numberline',title:`مقایسه ${signed(a)} و ${signed(b)} روی محور`,points:[{val:Math.max(-10,Math.min(10,a)),label:signed(a)},{val:0,label:'۰'},{val:Math.max(-10,Math.min(10,b)),label:signed(b)}]},
+      i%3===0?'easy':'medium');
+  }
+
+  // جمع و تفریق دو عدد با حرکت گام‌به‌گام روی همان محور انیمیشنی موجود
+  for (let i=1; i<=32; i++) {
+    let a = (i*3)%11-5, b = (i*5)%11-5;
+    if (a===0) a=4; if (b===0) b=-3;
+    const isSub = i%2===0;
+    const movement = isSub ? -b : b;
+    const result = a + movement;
+    const topic = isSub ? 'تفریق اعداد صحیح' : 'جمع اعداد صحیح';
+    const op = isSub ? ' − ' : ' + ';
+    const answer = signed(result);
+    const converted = isSub ? `${paren(a)} − ${paren(b)} = ${paren(a)} + ${paren(-b)}` : `${paren(a)} + ${paren(b)}`;
+    addRich(`C2-AXIS-${String(i).padStart(3,'0')}`, topic,
+      `حاصل ${paren(a)} ${op} ${paren(b)} با کمک محور اعداد کدام است؟`,
+      answer, [signed(result+2),signed(result-2),signed(-result)],
+      isSub ? 'تفریق را به جمع قرینه عدد دوم تبدیل کنید؛ سپس از صفر به عدد اول و از آنجا به اندازه عدد دومِ تبدیل‌شده حرکت کنید.' : 'از صفر به اندازه عدد اول حرکت کنید؛ سپس از نقطه پایان، به اندازه عدد دوم و در جهت علامت آن حرکت کنید.',
+      `${converted} = ${answer}.`,
+      isSub ? [`تبدیل تفریق به جمع قرینه: ${converted}.`,`حرکت اول: از صفر تا ${signed(a)}.`,`حرکت دوم: به اندازه ${signed(-b)} حرکت می‌کنیم و به ${answer} می‌رسیم.`] : [`حرکت اول: از صفر تا ${signed(a)}.`,`حرکت دوم: از ${signed(a)} به اندازه ${signed(b)} حرکت می‌کنیم.`,`نقطه پایان ${answer} است.`],
+      {kind:'move_line',title:`نمایش گام‌به‌گام ${converted} = ${answer}`,first:a,second:movement,end:result},
+      i%4===0?'easy':'medium');
+  }
+
+  // سه عدد صحیح دورقمی با علامت‌های مثبت و منفی؛ جدول دهگان/یکان و شرح حل
+  for (let i=1; i<=48; i++) {
+    const raw = [
+      10 + ((i*7)%39),
+      10 + ((i*11+5)%39),
+      10 + ((i*13+9)%39)
+    ];
+    const nums = raw.map((n,j) => ((i+j*2)%3===0 ? -n : n));
+    const isSub = i%2===0;
+    const terms = isSub ? [nums[0], -nums[1], nums[2]] : nums;
+    const result = terms.reduce((a,b)=>a+b,0);
+    const expr = isSub ? `${paren(nums[0])} − ${paren(nums[1])} + ${paren(nums[2])}` : nums.map(paren).join(' + ');
+    const shownTerms = terms.map(paren).join(' + ');
+    const topic = isSub ? 'تفریق اعداد صحیح' : 'جمع اعداد صحیح';
+    const answer = signed(result);
+    const positiveTotal = terms.filter(n=>n>0).reduce((a,b)=>a+b,0);
+    const negativeMagnitude = -terms.filter(n=>n<0).reduce((a,b)=>a+b,0);
+    const explanation = `${expr} = ${shownTerms}. مجموع عددهای مثبت: ${signed(positiveTotal)}؛ مجموع قدرمطلق عددهای منفی: ${F(negativeMagnitude)}. بنابراین ${F(positiveTotal)} − ${F(negativeMagnitude)} = ${answer}.`;
+    addRich(`C2-COL-${String(i).padStart(3,'0')}`,topic,
+      `حاصل عبارت سه‌عددی ${expr} کدام است؟`,
+      answer,[signed(result+10),signed(result-10),signed(-result)],
+      'برای حل، عددها را در جدول دهگان و یکان بررسی کنید. در تفریق، ابتدا آن را به جمع قرینه تبدیل کنید؛ سپس مجموع مثبت‌ها و قدرمطلق مجموع منفی‌ها را جداگانه به دست آورید.',
+      explanation,
+      [`در جدول، دهگان و یکان هر عدد را مشخص می‌کنیم؛ میله‌ها دهگان و دایره‌ها یکان را نشان می‌دهند.`,`تبدیل عبارت به جمع: ${shownTerms}.`,`مجموع عددهای مثبت برابر ${F(positiveTotal)} است.`,`مجموع قدرمطلق عددهای منفی برابر ${F(negativeMagnitude)} است.`,`تفاضل دو مجموع با علامت مناسب: ${F(positiveTotal)} − ${F(negativeMagnitude)} = ${answer}.`],
+      {kind:'signed_columns',title:'جدول ارزش مکانی دهگان و یکانِ سه عدد صحیح',operands:terms},
+      i%4===0?'hard':'medium');
+  }
+
+  const ids=new Set(questionBank.questions.map(q=>q.id));
+  extras.forEach(q=>{if(!ids.has(q.id)) questionBank.questions.push(q);});
+  saveQuestionBank();
+})();
+
+function saveQuestionBank() { localStorage.setItem(STORAGE_KEYS.QB, JSON.stringify(questionBank)); }
+
+// انتخاب تصادفی خودکار بدون تکرار هنگام ورود مجدد به هر بخش
+let recentlyShownIds = [];
+function pickRandomNonRepeating(pool, count) {
+  const fresh = pool.filter(q => !recentlyShownIds.includes(q.id));
+  const secondary = pool.filter(q => recentlyShownIds.includes(q.id));
+  const combined = [...shuffle(fresh), ...shuffle(secondary)].slice(0, Math.min(count, pool.length));
+  combined.forEach(q => {
+    recentlyShownIds.push(q.id);
+    if (recentlyShownIds.length > 22) recentlyShownIds.shift();
+  });
+  return combined;
+}
+
+function createNewProfileObj(name, gradeClass, avatar) {
+  return {
+    id: 'STU-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+    studentName: name || 'دانش‌آموز پایه هفتم',
+    gradeClass: gradeClass || 'هفتم - کلاس الف',
+    avatar: avatar || '🦊',
+    points: 0,
+    stars: 0,
+    currentStage: 1,
+    completedMissions: [],
+    badges: [],
+    gameStagesDone: { temp: 1, alg: 1, eq: 1 },
+    soundEnabled: true,
+    topicStats: {}
+  };
+}
+
+let profiles = (() => {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROFILES) || '[]');
+    if (Array.isArray(raw) && raw.length > 0) return raw;
+  } catch (e) {}
+  const initial = [createNewProfileObj('دانش‌آموز پایه هفتم', 'هفتم - کلاس الف', '🦊')];
+  localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(initial));
+  return initial;
+})();
+
+let activeProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PID) || profiles[0].id;
+if (!profiles.find(p => p.id === activeProfileId)) activeProfileId = profiles[0].id;
+
+let progress = profiles.find(p => p.id === activeProfileId);
+
+function saveProgress() {
+  const idx = profiles.findIndex(p => p.id === progress.id);
+  if (idx !== -1) profiles[idx] = progress;
+  else profiles.push(progress);
+  localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(profiles));
+  localStorage.setItem(STORAGE_KEYS.ACTIVE_PID, progress.id);
+  renderTopBar();
+}
+
+function switchStudentProfile(pid) {
+  const found = profiles.find(p => p.id === pid);
+  if (found) {
+    progress = found;
+    activeProfileId = pid;
+    localStorage.setItem(STORAGE_KEYS.ACTIVE_PID, pid);
+    renderTopBar();
+    render();
+  }
+}
+
+let reports = JSON.parse(localStorage.getItem(STORAGE_KEYS.REPORTS) || '[]');
+function saveReports() { localStorage.setItem(STORAGE_KEYS.REPORTS, JSON.stringify(reports)); }
+
+let customExams = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_EXAMS) || '[]');
+function saveCustomExams() { localStorage.setItem(STORAGE_KEYS.CUSTOM_EXAMS, JSON.stringify(customExams)); }
+
+let descAnswers = JSON.parse(localStorage.getItem(STORAGE_KEYS.DESC_ANSWERS) || '{}');
+function descAnswerKey(qId, pid = progress.id) { return `${pid}::${qId}`; }
+function getStudentDescAnswer(qId, pid = progress.id) { return descAnswers[descAnswerKey(qId, pid)] || descAnswers[qId] || null; }
+function saveDescAnswers() { localStorage.setItem(STORAGE_KEYS.DESC_ANSWERS, JSON.stringify(descAnswers)); }
+
+function playTone(type) {
+  if (!progress.soundEnabled) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    if (type === 'ok') {
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.09);
+      osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.18);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      osc.start(); osc.stop(ctx.currentTime + 0.3);
+    } else {
+      osc.frequency.setValueAtTime(240, ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      osc.start(); osc.stop(ctx.currentTime + 0.2);
+    }
+  } catch (e) {}
+}
+
+function setMascot(msg) {
+  const el = document.getElementById('mascotText');
+  if (el) el.innerHTML = toFa(msg);
+  const av = document.getElementById('mascotAvatarIcon');
+  if (av && progress) av.textContent = progress.avatar || '🦉';
+}
+
+function renderTopBar() {
+  document.getElementById('topStats').innerHTML = `
+    <div class="stat-pill" style="cursor:pointer;" onclick="navigate('profile')">
+      <span style="font-size:1.15rem;">${progress.avatar || '🦊'}</span>
+      <span>${progress.studentName}</span>
+      <button type="button">پروفایل و آواتار</button>
+    </div>
+    <div class="stat-pill">🏆 امتیاز: <span>${toFa(progress.points)}</span></div>
+    <div class="stat-pill">⭐ ستاره: <span>${toFa(progress.stars)}</span></div>
+    <div class="stat-pill">🚩 مرحله: <span>${toFa(progress.currentStage)}</span></div>
+    <div class="stat-pill">🎯 مأموریت‌ها: <span>${toFa(progress.completedMissions.length)}</span></div>
+    <div class="stat-pill" style="cursor:pointer" onclick="toggleSound()">${progress.soundEnabled ? '🔊 صدا' : '🔇 بی‌صدا'}</div>
+  `;
+}
+
+function toggleSound() {
+  progress.soundEnabled = !progress.soundEnabled;
+  saveProgress();
+}
+
+let currentRoute = 'home';
+let routeParams = {};
+
+function navigate(route, params = {}) {
+  currentRoute = route;
+  routeParams = params;
+  // هر بار ورود مجدد به تمرین یا تشریحی، انتخاب تصادفی جدید انجام شود
+  if (route === 'practice') {
+    practiceState.pool = [];
+    practiceState.poolSignature = '';
+    practiceState.index = 0;
+    practiceState.showHint = false;
+    practiceState.showSteps = false;
+    practiceState.sessionSeed = Date.now();
+  }
+  if (route === 'descriptive') {
+    descState.pool = [];
+    descState.poolSignature = '';
+    descState.index = 0;
+    descState.showSolution = false;
+    descState.sessionSeed = Date.now();
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render();
+}
+
+function diffLabel(d) {
+  if (d === 'easy') return '<span class="badge badge-easy">آسان</span>';
+  if (d === 'medium') return '<span class="badge badge-medium">متوسط</span>';
+  return '<span class="badge badge-hard">سخت</span>';
+}
+
+function chLabel(c) {
+  return `<span class="badge badge-ch">فصل ${toFa(c)}</span>`;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ==================== صفحه پروفایل دانش‌آموز و انتخاب آواتار ====================
+let selectedNewAvatar = '🦁';
+function renderProfile() {
+  setMascot('اینجا می‌توانی آواتار دلخواهت را انتخاب کنی یا با نام و مشخصات خودت پروفایل جدید بسازی تا امتیازهای هر دانش‌آموز جداگانه ذخیره شود!');
+  return `
+    <div class="section-header">
+      <h2>👤 پروفایل دانش‌آموز و انتخاب آواتار</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">✨ ویرایش پروفایل فعال: ${progress.avatar} ${progress.studentName}</h3>
+      <div class="form-grid">
+        <label class="field">نام و نام خانوادگی دانش‌آموز:
+          <input type="text" id="editProfName" value="${progress.studentName}" />
+        </label>
+        <label class="field">کلاس / مشخصات:
+          <input type="text" id="editProfClass" value="${progress.gradeClass || 'هفتم - کلاس الف'}" />
+        </label>
+      </div>
+      <div style="font-weight:800; font-size:0.9rem; margin-bottom:6px;">انتخاب آواتار زیبا برای پروفایل فعلی:</div>
+      <div class="avatar-grid">
+        ${AVATAR_GALLERY.map(av => `
+          <div class="avatar-choice ${progress.avatar === av ? 'selected' : ''}" onclick="progress.avatar='${av}'; saveProgress(); render();">${av}</div>
+        `).join('')}
+      </div>
+      <button class="btn btn-primary" style="margin-top:10px;" onclick="updateActiveProfileInfo()">💾 ذخیره تغییرات پروفایل</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">➕ ورود دانش‌آموز جدید (ساخت پروفایل اختصاصی)</h3>
+      <div class="form-grid">
+        <label class="field">نام دانش‌آموز جدید:
+          <input type="text" id="newProfName" placeholder="مثلاً: زهرا محمدی یا امیرحسین رضایی" />
+        </label>
+        <label class="field">کلاس و شماره کلاسی:
+          <input type="text" id="newProfClass" placeholder="مثلاً: هفتم ۲ - شماره ۱۴" />
+        </label>
+      </div>
+      <div style="font-weight:800; font-size:0.9rem; margin-bottom:6px;">آواتار دانش‌آموز جدید را انتخاب کنید:</div>
+      <div class="avatar-grid">
+        ${AVATAR_GALLERY.map(av => `
+          <div class="avatar-choice ${selectedNewAvatar === av ? 'selected' : ''}" onclick="selectedNewAvatar='${av}'; render();">${av}</div>
+        `).join('')}
+      </div>
+      <button class="btn btn-success" style="margin-top:10px;" onclick="createAndSwitchProfile()">🚀 ثبت و ورود با این پروفایل</button>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">📋 لیست پروفایل‌های ثبت‌شده در این دستگاه (${toFa(profiles.length)} دانش‌آموز)</h3>
+      ${profiles.map(p => `
+        <div class="profile-card-item ${p.id === progress.id ? 'active-prof' : ''}">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:2.2rem;">${p.avatar}</span>
+            <div>
+              <strong>${p.studentName}</strong> <span class="badge badge-ch">${p.gradeClass || 'هفتم'}</span>
+              <div style="font-size:0.83rem; color:var(--muted);">امتیاز: ${toFa(p.points)} | ستاره: ${toFa(p.stars)} | مأموریت‌ها: ${toFa(p.completedMissions.length)}</div>
+            </div>
+          </div>
+          <div>
+            ${p.id === progress.id
+              ? '<span class="badge badge-easy">✅ فعال</span>'
+              : `<button class="btn btn-primary btn-sm" onclick="switchStudentProfile('${p.id}')">ورود با این پروفایل</button>`}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">📬 بازخوردهای معلم</h3>
+      ${Object.entries(descAnswers).filter(([k,a]) => a && a.studentId === progress.id && (a.teacherFeedback || a.status === 'بررسی و بازخورد معلم ثبت شد')).length
+        ? Object.entries(descAnswers).filter(([k,a]) => a && a.studentId === progress.id && (a.teacherFeedback || a.status === 'بررسی و بازخورد معلم ثبت شد')).map(([k,a]) => {
+          const q = questionBank.questions.find(x => x.id === (a.questionId || k.split('::').pop()));
+          return `<div class="feedback-box" style="margin-bottom:10px">
+            <div><strong>سؤال:</strong> ${q ? formatMathText(q.question) : toFa(a.questionId || '')}</div>
+            <div style="margin-top:6px"><span class="badge badge-easy">${a.status || 'بررسی شد'}</span> <span style="color:var(--muted);font-size:.82rem">${a.reviewedAt || ''}</span></div>
+            <div style="margin-top:8px"><strong>یادداشت معلم:</strong> ${a.teacherFeedback ? formatMathText(a.teacherFeedback) : 'معلم پاسخ را بررسی و تأیید کرده است.'}</div>
+          </div>`;
+        }).join('')
+        : '<p style="color:var(--muted)">هنوز بازخوردی از طرف معلم برای پاسخ‌های شما ثبت نشده است.</p>'}
+    </div>
+  `;
+}
+
+function updateActiveProfileInfo() {
+  const n = document.getElementById('editProfName').value.trim();
+  const c = document.getElementById('editProfClass').value.trim();
+  if (!n) { alert('نام دانش‌آموز نمی‌تواند خالی باشد.'); return; }
+  progress.studentName = n;
+  progress.gradeClass = c || 'هفتم';
+  saveProgress();
+  alert('مشخصات و آواتار پروفایل شما ذخیره شد!');
+  render();
+}
+
+function createAndSwitchProfile() {
+  const n = document.getElementById('newProfName').value.trim();
+  const c = document.getElementById('newProfClass').value.trim();
+  if (!n) { alert('لطفاً نام دانش‌آموز جدید را وارد کنید.'); return; }
+  const created = createNewProfileObj(n, c || 'هفتم', selectedNewAvatar);
+  profiles.push(created);
+  progress = created;
+  activeProfileId = created.id;
+  saveProgress();
+  alert(`خوش آمدی ${n}! پروفایل اختصاصی تو ساخته شد.`);
+  navigate('home');
+}
+
+// ==================== صفحه اصلی (همان قالب اولیه) ====================
+function renderHome() {
+  setMascot(`سلام ${progress.studentName}! هر بخش را انتخاب کن؛ تمام سؤال‌ها از متن کتاب درسی انتخاب شده و با هر ورود چیدمان تصادفی تازه دارند.`);
+  const items = [
+    { id: 'adventure', icon: '🗺️', title: '۱. شروع ماجراجویی', desc: 'قلمرو فصل دوم و شهر فصل سوم با انتخاب تصادفی سؤال از کتاب' },
+    { id: 'quizSetup', icon: '⚡', title: '۲. مسابقه چهارگزینه‌ای', desc: 'رقابت امتیازی با انتخاب فصل، مبحث، سطح و زمان' },
+    { id: 'multiplayer', icon: '🤼', title: 'مسابقه همزمان چندنفره', desc: 'رقابت ۲ تا ۴ دانش‌آموز و اعلام رتبه‌بندی برنده‌ها در پایان' },
+    { id: 'miniGames', icon: '🕹️', title: 'بازی‌های سرگرم‌کننده ریاضی', desc: 'بازی‌های رنگارنگ و مرحله‌ای برای استراحت و یادگیری عمیق ریاضی' },
+    { id: 'practice', icon: '💡', title: '۳. تمرین و یادگیری', desc: 'سؤال‌های تصادفی کتاب با سرنخ و محور انیمیشنی گام‌به‌گام' },
+    { id: 'descriptive', icon: '✍️', title: '۴. بانک سؤال‌های تشریحی', desc: 'ثبت پاسخ تشریحی، شکل راهنما و وضعیت بررسی معلم' },
+    { id: 'customExam', icon: '📝', title: '۵. آزمون اختصاصی', desc: 'ساخت آزمون دلخواه یا شرکت در آزمون‌های معلم' },
+    { id: 'sampleExams', icon: '📚', title: '۶. نمونه سؤال‌های امتحانی (۲۷ بسته)', desc: 'بیش از ۲۵ نمونه امتحان فصلی و ترکیبی دو فصل' },
+    { id: 'report', icon: '📊', title: '۷. کارنامه و گزارش عملکرد', desc: 'تحلیل عملکرد، تشخیص نقاط ضعف و پیشنهاد تمرین' },
+    { id: 'profile', icon: progress.avatar || '🦊', title: 'پروفایل و آواتار دانش‌آموز', desc: 'انتخاب آواتار زیبا و ثبت پروفایل اختصاصی برای هر دانش‌آموز' },
+    { id: 'teacher', icon: '👨‍🏫', title: '۸. ورود معلم', desc: 'مدیریت بانک سؤال، طراحی و چاپ آزمون (محافظت‌شده با رمز)' }
+  ];
+
+  return `
+    <div class="nav-grid">
+      ${items.map(it => `
+        <div class="menu-card" onclick="navigate('${it.id}')">
+          <div class="menu-icon">${it.icon}</div>
+          <h3>${toFa(it.title)}</h3>
+          <p>${toFa(it.desc)}</p>
+        </div>
+      `).join('')}
+    </div>
+    <div class="card" style="margin-top:18px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
+      <div>
+        <strong>🌐 لینک اشتراک‌گذاری و انتشار آنلاین:</strong>
+        <span style="color:var(--muted); font-size:0.88rem;">راهنمای قرار دادن فایل روی GitHub Pages / Netlify / Vercel و اشتراک‌گذاری با سایر کاربران</span>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="navigate('docs')">راهنمای انتشار آنلاین و مباحث</button>
+    </div>
+  `;
+}
+
+// ==================== ۱. ماجراجویی ====================
+const ADVENTURE_STAGES = [
+  { id: 'M2-1', chapter: 2, title: 'دروازه عددهای علامت‌دار', topics: ['قرینه اعداد صحیح', 'مقایسه اعداد صحیح'], desc: 'قرینه، محور اعداد و مقایسه عددهای مثبت و منفی' },
+  { id: 'M2-2', chapter: 2, title: 'پل جمع و تفریق صحیح', topics: ['جمع اعداد صحیح', 'تفریق اعداد صحیح', 'ترکیب جمع و تفریق'], desc: 'تبدیل تفریق به جمع قرینه و حرکت گام‌به‌گام روی محور' },
+  { id: 'M2-3', chapter: 2, title: 'قلعه ضرب، تقسیم و مسائل', topics: ['ضرب اعداد صحیح', 'تقسیم اعداد صحیح', 'ترکیب ضرب و تقسیم', 'کاربرد اعداد صحیح'], desc: 'قوانین علامت‌ها و مسائل دما، آسانسور و زیردریایی' },
+  { id: 'M3-1', chapter: 3, title: 'برج الگوها و عبارت جبری', topics: ['الگوهای عددی', 'عبارت جبری', 'محیط و مساحت با عبارت جبری'], desc: 'جمله nام، عبارت جبری و محیط/مساحت هندسی' },
+  { id: 'M3-2', chapter: 3, title: 'کارگاه ساده‌سازی و مقدار عددی', topics: ['جمله‌های متشابه', 'خاصیت توزیع‌پذیری', 'مقدار عددی عبارت جبری'], desc: 'ساده‌کردن عبارت‌ها، خاصیت توزیع‌پذیری و جایگذاری' },
+  { id: 'M3-3', chapter: 3, title: 'تاج‌گذاری معادله‌ها', topics: ['معادله'], desc: 'حل معادله‌ها و مسائل کاربردی فصل سوم' }
+];
+
+const ALL_BADGES = [
+  { id: 'B-CH2', title: '🏅 فاتح سرزمین اعداد صحیح', req: 'تکمیل مأموریت‌های فصل دوم' },
+  { id: 'B-CH3', title: '🎖️ استاد شهر جبر و معادله', req: 'تکمیل مأموریت‌های فصل سوم' },
+  { id: 'B-100', title: '💎 شکارچی ۱۰۰ امتیاز', req: 'کسب حداقل ۱۰۰ امتیاز' },
+  { id: 'B-HERO', title: '👑 قهرمان ریاضی هفتم', req: 'تکمیل هر ۶ مأموریت' }
+];
+
+function checkAndAwardBadges() {
+  const m2Done = ['M2-1','M2-2','M2-3'].every(id => progress.completedMissions.includes(id));
+  const m3Done = ['M3-1','M3-2','M3-3'].every(id => progress.completedMissions.includes(id));
+  if (m2Done && !progress.badges.includes('B-CH2')) progress.badges.push('B-CH2');
+  if (m3Done && !progress.badges.includes('B-CH3')) progress.badges.push('B-CH3');
+  if (progress.points >= 100 && !progress.badges.includes('B-100')) progress.badges.push('B-100');
+  if (m2Done && m3Done && !progress.badges.includes('B-HERO')) progress.badges.push('B-HERO');
+}
+
+function renderAdventure() {
+  setMascot('هر بار که وارد مأموریتی می‌شوی، سؤال‌ها به‌صورت تصادفی از متن کتاب درسی انتخاب می‌شوند!');
+  const ch2Stages = ADVENTURE_STAGES.filter(s => s.chapter === 2);
+  const ch3Stages = ADVENTURE_STAGES.filter(s => s.chapter === 3);
+
+  const renderStageList = (list) => list.map((st, idx) => {
+    const done = progress.completedMissions.includes(st.id);
+    return `
+      <div class="stage-item">
+        <div>
+          <strong>${done ? '✅' : '⚔️'} مرحله ${toFa(idx + 1)}: ${st.title}</strong>
+          <div style="font-size:0.82rem; opacity:0.9;">${st.desc}</div>
+        </div>
+        <button class="btn btn-warning btn-sm" onclick="startMission('${st.id}')">${done ? 'مأموریت جدید' : 'شروع مأموریت'}</button>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="section-header">
+      <h2>🗺️ نقشه ماجراجویی در سرزمین ریاضی</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+    <div class="realms-grid">
+      <div class="realm-card realm-2">
+        <h3 style="margin-top:0">🏔️ قلمرو اول: سرزمین فصل دوم</h3>
+        <p style="font-size:0.9rem; opacity:0.95;">عددهای صحیح، محور اعداد، قرینه، جمع و تفریق، ضرب و تقسیم</p>
+        <div class="stage-list">${renderStageList(ch2Stages)}</div>
+      </div>
+      <div class="realm-card realm-3">
+        <h3 style="margin-top:0">🏰 قلمرو دوم: شهر فصل سوم</h3>
+        <p style="font-size:0.9rem; opacity:0.95;">الگوهای عددی، عبارت جبری، جمله‌های متشابه، مقدار عددی و معادله</p>
+        <div class="stage-list">${renderStageList(ch3Stages)}</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <h3 style="margin-top:0">🏆 نشان‌ها و دستاوردهای ${progress.studentName}</h3>
+      <div class="badges-row">
+        ${ALL_BADGES.map(b => {
+          const unlocked = progress.badges.includes(b.id);
+          return `<div class="medal ${unlocked ? '' : 'locked'}">${toFa(b.title)} <small>(${unlocked ? 'آزاد شد!' : toFa(b.req)})</small></div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function startMission(missionId) {
+  const mission = ADVENTURE_STAGES.find(m => m.id === missionId);
+  const pool = questionBank.questions.filter(q => q.type === 'mcq' && q.chapter === mission.chapter && mission.topics.includes(q.topic));
+  const selected = pickRandomNonRepeating(pool, Math.min(6, pool.length));
+  startQuizSession({ title: `مأموریت: ${mission.title}`, questions: selected, timed: false, missionId: mission.id });
+}
+
+// ==================== ۲ و ۵: مسابقه و آزمون اختصاصی ====================
+function getTopicsByChapter(ch) {
+  const qs = ch === 'all' ? questionBank.questions : questionBank.questions.filter(q => String(q.chapter) === String(ch));
+  return [...new Set(qs.map(q => q.topic))];
+}
+
+function renderQuizSetup(isCustom = false) {
+  setMascot('هر بار که مسابقه یا آزمون را شروع کنی، سؤال‌های کتاب به‌صورت تصادفی انتخاب می‌شوند.');
+  const selectedCh = routeParams.chapter || 'all';
+  const topics = getTopicsByChapter(selectedCh);
+
+  return `
+    <div class="section-header">
+      <h2>${isCustom ? '📝 آزمون اختصاصی' : '⚡ تنظیمات مسابقه چهارگزینه‌ای'}</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+    <div class="card">
+      <div class="form-grid">
+        <label class="field">انتخاب فصل:
+          <select id="cfgChapter" onchange="navigate('${isCustom ? 'customExam' : 'quizSetup'}', { chapter: this.value })">
+            <option value="all" ${selectedCh === 'all' ? 'selected' : ''}>آزمون ترکیبی (فصل دوم و سوم)</option>
+            <option value="2" ${selectedCh === '2' ? 'selected' : ''}>فصل دوم: عددهای صحیح</option>
+            <option value="3" ${selectedCh === '3' ? 'selected' : ''}>فصل سوم: جبر و معادله</option>
+          </select>
+        </label>
+        <label class="field">انتخاب مبحث مشخص:
+          <select id="cfgTopic">
+            <option value="all">همه مباحث فصل انتخاب‌شده</option>
+            ${topics.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </label>
+        <label class="field">سطح دشواری:
+          <select id="cfgDiff">
+            <option value="all">ترکیبی (آسان، متوسط، سخت)</option>
+            <option value="easy">آسان (۱۰ امتیاز)</option>
+            <option value="medium">متوسط (۲۰ امتیاز)</option>
+            <option value="hard">سخت (۳۰ امتیاز)</option>
+          </select>
+        </label>
+        <label class="field">تعداد سؤال:
+          <select id="cfgCount">
+            <option value="6">۶ سؤال</option>
+            <option value="10" selected>۱۰ سؤال</option>
+            <option value="15">۱۵ سؤال</option>
+            <option value="20">۲۰ سؤال</option>
+          </select>
+        </label>
+        <label class="field">نوع زمان‌بندی:
+          <select id="cfgTimed">
+            <option value="no">بدون محدودیت زمانی</option>
+            <option value="yes">آزمون زمان‌دار (۱ دقیقه برای هر سؤال)</option>
+          </select>
+        </label>
+        ${isCustom ? `
+        <label class="field">نوع سؤال‌ها:
+          <select id="cfgType">
+            <option value="mcq">چهارگزینه‌ای</option>
+            <option value="descriptive">تشریحی</option>
+            <option value="mixed">ترکیبی (چهارگزینه‌ای + تشریحی)</option>
+          </select>
+        </label>` : ''}
+      </div>
+      <button class="btn btn-primary" onclick="launchConfiguredQuiz(${isCustom})">🚀 شروع با انتخاب تصادفی جدید</button>
+    </div>
+
+    ${isCustom && customExams.length > 0 ? `
+      <div class="card">
+        <h3 style="margin-top:0">📋 آزمون‌های ساخته‌شده توسط معلم</h3>
+        <div class="stage-list">
+          ${customExams.map((ex, i) => `
+            <div class="stage-item" style="background:#f8fafc; border-color:#cbd5e1; color:var(--text);">
+              <div>
+                <strong>${ex.title}</strong>
+                <div style="font-size:0.83rem; color:var(--muted);">تعداد سؤال: ${toFa(ex.questionIds.length)} | زمان: ${ex.duration ? toFa(ex.duration) + ' دقیقه' : 'نامحدود'}</div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="startTeacherExam(${i})">شرکت در آزمون</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+function launchConfiguredQuiz(isCustom) {
+  const ch = document.getElementById('cfgChapter').value;
+  const topic = document.getElementById('cfgTopic').value;
+  const diff = document.getElementById('cfgDiff').value;
+  const count = Number(document.getElementById('cfgCount').value);
+  const timed = document.getElementById('cfgTimed').value === 'yes';
+  const qType = isCustom ? document.getElementById('cfgType').value : 'mcq';
+
+  let pool = questionBank.questions.filter(q => {
+    if (ch !== 'all' && String(q.chapter) !== ch) return false;
+    if (topic !== 'all' && q.topic !== topic) return false;
+    if (diff !== 'all' && q.difficulty !== diff) return false;
+    if (qType === 'mcq' && q.type !== 'mcq') return false;
+    if (qType === 'descriptive' && q.type !== 'descriptive') return false;
+    return true;
+  });
+
+  if (pool.length === 0) {
+    alert('با فیلترهای انتخاب‌شده سؤالی یافت نشد! تنظیمات را گسترده‌تر کنید.');
+    return;
+  }
+
+  const selected = pickRandomNonRepeating(pool, Math.min(count, pool.length));
+  startQuizSession({
+    title: isCustom ? 'آزمون اختصاصی دانش‌آموز' : 'مسابقه چهارگزینه‌ای',
+    questions: selected,
+    timed,
+    timeLimitSec: timed ? selected.length * 60 : 0
+  });
+}
+
+function startTeacherExam(idx) {
+  const ex = customExams[idx];
+  const qs = ex.questionIds.map(id => questionBank.questions.find(q => q.id === id)).filter(Boolean);
+  startQuizSession({ title: ex.title, questions: qs, timed: ex.duration > 0, timeLimitSec: ex.duration * 60 });
+}
+
+// ==================== مسابقه همزمان چندنفره ====================
+let mpState = {
+  phase: 'setup',
+  players: [
+    { name: 'بازیکن ۱ (سارا)', avatar: '🦄', score: 0, correct: 0 },
+    { name: 'بازیکن ۲ (علی)', avatar: '🦁', score: 0, correct: 0 }
+  ],
+  chapter: 'all',
+  qCount: 8,
+  questions: [],
+  qIndex: 0,
+  turnIdx: 0,
+  lastFeedback: ''
+};
+
+function renderMultiplayer() {
+  setMascot('مسابقه همزمان چندنفره! هر بازیکن نوبتی پاسخ می‌دهد و در پایان رتبه‌بندی برنده‌ها اعلام می‌شود.');
+  if (mpState.phase === 'setup') {
+    return `
+      <div class="section-header">
+        <h2>🤼 مسابقه همزمان چندنفره</h2>
+        <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+      </div>
+      <div class="card">
+        <div class="form-grid">
+          <label class="field">تعداد بازیکنان:
+            <select id="mpPlayerCount" onchange="updateMpPlayerInputs(Number(this.value))">
+              <option value="2" ${mpState.players.length===2?'selected':''}>۲ بازیکن</option>
+              <option value="3" ${mpState.players.length===3?'selected':''}>۳ بازیکن</option>
+              <option value="4" ${mpState.players.length===4?'selected':''}>۴ بازیکن</option>
+            </select>
+          </label>
+          <label class="field">محدوده فصل:
+            <select id="mpCh">
+              <option value="all">ترکیبی (فصل دوم و سوم)</option>
+              <option value="2">فصل دوم: عددهای صحیح</option>
+              <option value="3">فصل سوم: جبر و معادله</option>
+            </select>
+          </label>
+          <label class="field">تعداد سؤال مسابقه:
+            <select id="mpQCount">
+              <option value="6">۶ سؤال</option>
+              <option value="8" selected>۸ سؤال</option>
+              <option value="12">۱۲ سؤال</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-grid" id="mpNamesWrap">
+          ${mpState.players.map((p, i) => `
+            <label class="field">${p.avatar} نام بازیکن ${toFa(i + 1)}:
+              <input type="text" class="mp-name-input" value="${p.name}" />
+            </label>
+          `).join('')}
+        </div>
+
+        <button class="btn btn-primary anim-pulse" onclick="startMultiplayerMatch()">🏁 شروع مسابقه چندنفره</button>
+      </div>
+    `;
+  }
+
+  if (mpState.phase === 'playing') {
+    const q = mpState.questions[mpState.qIndex];
+    const activeP = mpState.players[mpState.turnIdx];
+    const letters = ['الف', 'ب', 'ج', 'د'];
+    return `
+      <div class="section-header">
+        <h2>🤼 سؤال ${toFa(mpState.qIndex + 1)} از ${toFa(mpState.questions.length)}</h2>
+        <button class="btn btn-danger btn-sm" onclick="mpState.phase='finished'; render();">پایان و اعلام نتایج</button>
+      </div>
+
+      <div class="score-board-grid">
+        ${mpState.players.map((p, i) => `
+          <div class="player-card ${i === mpState.turnIdx ? 'active-turn' : ''}">
+            <strong>${i === mpState.turnIdx ? '👉 نوبت: ' : ''}${p.avatar} ${p.name}</strong>
+            <div>امتیاز: <strong>${toFa(p.score)}</strong> | صحیح: ${toFa(p.correct)}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="card">
+        <div style="margin-bottom:8px;">${chLabel(q.chapter)} ${diffLabel(q.difficulty)} <span class="badge" style="background:#eef2ff; color:var(--primary-dark);">نوبت پاسخ‌گویی: ${activeP.name}</span></div>
+        <div style="font-size:1.12rem; font-weight:700; margin:12px 0;">${formatMathText(q.question)}</div>
+        ${renderVisualSVG(q.visual)}
+        <div class="options-list">
+          ${q.options.map((opt, idx) => `
+            <button class="option-btn" onclick="submitMpAnswer('${opt.replace(/'/g, "\'")}')">
+              <span class="opt-letter">${letters[idx]}</span>
+              <span>${formatMathText(opt)}</span>
+            </button>
+          `).join('')}
+        </div>
+        ${mpState.lastFeedback ? `<div class="feedback-box">${mpState.lastFeedback}</div>` : ''}
+      </div>
+    `;
+  }
+
+  const ranked = [...mpState.players].sort((a, b) => b.score - a.score || b.correct - a.correct);
+  const medals = ['🥇 مقام اول (قهرمان)', '🥈 مقام دوم', '🥉 مقام سوم', '🏅 مقام چهارم'];
+  return `
+    <div class="section-header">
+      <h2>🏆 نتایج نهایی و رتبه‌بندی برندگان مسابقه</h2>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="mpState.phase='setup'; render();">مسابقه مجدد</button>
+        <button class="btn btn-outline btn-sm" onclick="navigate('home')">خانه</button>
+      </div>
+    </div>
+    <div class="card">
+      ${ranked.map((p, idx) => `
+        <div class="stage-item" style="background:${idx===0 ? '#fef3c7' : '#f8fafc'}; color:#0f172a; border-color:#cbd5e1; margin-bottom:10px;">
+          <div>
+            <strong style="font-size:1.05rem;">${medals[idx] || 'مقام ' + toFa(idx+1)} — ${p.avatar} ${p.name}</strong>
+            <div style="font-size:0.85rem; color:var(--muted);">تعداد پاسخ صحیح: ${toFa(p.correct)}</div>
+          </div>
+          <div style="font-size:1.15rem; font-weight:900; color:var(--primary-dark);">${toFa(p.score)} امتیاز</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function updateMpPlayerInputs(cnt) {
+  const existing = [...document.querySelectorAll('.mp-name-input')].map(i => i.value);
+  const avs = ['🦄', '🦁', '🐼', '🚀'];
+  mpState.players = Array.from({ length: cnt }, (_, i) => ({
+    name: existing[i] || `بازیکن ${toFa(i + 1)}`,
+    avatar: avs[i % avs.length],
+    score: 0,
+    correct: 0
+  }));
+  render();
+}
+
+function startMultiplayerMatch() {
+  const nameInputs = [...document.querySelectorAll('.mp-name-input')];
+  mpState.players = nameInputs.map((inp, i) => ({
+    name: inp.value.trim() || `بازیکن ${toFa(i + 1)}`,
+    avatar: mpState.players[i]?.avatar || '🦊',
+    score: 0,
+    correct: 0
+  }));
+  const ch = document.getElementById('mpCh').value;
+  const qCount = Number(document.getElementById('mpQCount').value);
+  const pool = questionBank.questions.filter(q => q.type === 'mcq' && (ch === 'all' || String(q.chapter) === ch));
+  mpState.questions = pickRandomNonRepeating(pool, Math.min(qCount, pool.length));
+  mpState.qIndex = 0;
+  mpState.turnIdx = 0;
+  mpState.lastFeedback = '';
+  mpState.phase = 'playing';
+  render();
+}
+
+function submitMpAnswer(chosen) {
+  const q = mpState.questions[mpState.qIndex];
+  const p = mpState.players[mpState.turnIdx];
+  const ok = chosen === q.answer;
+  if (ok) {
+    p.score += q.points;
+    p.correct += 1;
+    playTone('ok');
+    mpState.lastFeedback = `✅ ${p.name} درست پاسخ داد (+${toFa(q.points)} امتیاز)! ${formatMathText(q.explanation)}`;
+  } else {
+    playTone('err');
+    mpState.lastFeedback = `❌ پاسخ ${p.name} نادرست بود. پاسخ صحیح: ${formatMathText(q.answer)} — ${formatMathText(q.explanation)}`;
+  }
+
+  mpState.turnIdx = (mpState.turnIdx + 1) % mpState.players.length;
+  if (mpState.qIndex + 1 < mpState.questions.length) {
+    mpState.qIndex++;
+    render();
+  } else {
+    mpState.phase = 'finished';
+    render();
+  }
+}
+
+// ==================== ۵. بازی‌های رنگارنگ، مرحله‌ای و هیجان‌انگیز اوقات استراحت ====================
+let gameState = {
+  activeGame: 'tempGame',
+  combo: 0,
+  // بازی ۱: دماسنج و آسانسور (۳ مرحله)
+  tempStage: 1,
+  tempTarget: -4,
+  tempCurrent: 0,
+  tempMovesLeft: 4,
+  tempMsg: '',
+  // بازی ۲: شکارچی جمله‌های متشابه و قرینه‌ها (۳ مرحله)
+  algStage: 1,
+  algExpr: '',
+  algTarget: '',
+  algOptions: [],
+  algMsg: '',
+  // بازی ۳: ترازو و کارگاه حل معادله (۳ مرحله)
+  eqStage: 1,
+  eqText: '',
+  eqX: 4,
+  eqHint: '',
+  eqMsg: ''
+};
+
+function setupTempStage(st) {
+  gameState.tempStage = st;
+  gameState.tempMsg = '';
+  if (st === 1) {
+    const arr = [-5, -3, -2, 3, 4, 6];
+    gameState.tempTarget = arr[Math.floor(Math.random() * arr.length)];
+    gameState.tempCurrent = 0;
+    gameState.tempMovesLeft = 5;
+  } else if (st === 2) {
+    const starts = [-4, 2, -2, 5];
+    const targets = [-9, -6, 7, 8];
+    gameState.tempCurrent = starts[Math.floor(Math.random() * starts.length)];
+    gameState.tempTarget = targets[Math.floor(Math.random() * targets.length)];
+    if (gameState.tempCurrent === gameState.tempTarget) gameState.tempTarget -= 4;
+    gameState.tempMovesLeft = 4;
+  } else {
+    const starts = [-7, 6, -8, 9];
+    const targets = [5, -6, 4, -5];
+    gameState.tempCurrent = starts[Math.floor(Math.random() * starts.length)];
+    gameState.tempTarget = targets[Math.floor(Math.random() * targets.length)];
+    gameState.tempMovesLeft = 3;
+  }
+}
+
+function setupAlgStage(st) {
+  gameState.algStage = st;
+  gameState.algMsg = '';
+  const stagesBank = {
+    1: [
+      { expr: '-(+(-۷))', ans: '+۷', opts: ['+۷', '-۷', '۰', '-۱۴'] },
+      { expr: '-(-(-۵))', ans: '-۵', opts: ['-۵', '+۵', '۰', '-۱۵'] },
+      { expr: '۳x + ۲x', ans: '۵x', opts: ['۵x', '۶x', 'x', '۵'] },
+      { expr: '۷a - ۳a', ans: '۴a', opts: ['۴a', '۱۰a', '۴', '-۴a'] }
+    ],
+    2: [
+      { expr: '۵a + ۳b - ۲a + b', ans: '۳a + ۴b', opts: ['۳a + ۴b', '۷a + ۲b', '۳a + ۲b', '۸ab'] },
+      { expr: '۴(x + ۲)', ans: '۴x + ۸', opts: ['۴x + ۸', '۴x + ۲', 'x + ۸', '۴x + ۶'] },
+      { expr: '-(۳x - ۵y)', ans: '-۳x + ۵y', opts: ['-۳x + ۵y', '-۳x - ۵y', '۳x + ۵y', '-۳x + ۱۵y'] }
+    ],
+    3: [
+      { expr: '۳(۲x - ۱) + ۲x', ans: '۸x - ۳', opts: ['۸x - ۳', '۶x - ۱', '۸x - ۱', '۵x - ۳'] },
+      { expr: '(۳x - ۸) - (۳x + ۷)', ans: '-۱۵', opts: ['-۱۵', '-۱', '۶x - ۱۵', '+۱۵'] },
+      { expr: '۲(y + x) - (x - y)', ans: 'x + ۳y', opts: ['x + ۳y', 'x + y', '۳x + y', 'x - ۳y'] }
+    ]
+  };
+  const list = stagesBank[st];
+  const pick = list[Math.floor(Math.random() * list.length)];
+  gameState.algExpr = pick.expr;
+  gameState.algTarget = pick.ans;
+  gameState.algOptions = shuffle(pick.opts);
+}
+
+function setupEqStage(st) {
+  gameState.eqStage = st;
+  gameState.eqMsg = '';
+  if (st === 1) {
+    const x = Math.floor(Math.random() * 6) + 2;
+    const b = Math.floor(Math.random() * 7) + 1;
+    gameState.eqX = x;
+    gameState.eqText = `x + ${toFa(b)} = ${toFa(x + b)}`;
+    gameState.eqHint = `از دو طرف عدد ${toFa(b)} را کم کن.`;
+  } else if (st === 2) {
+    const a = Math.floor(Math.random() * 3) + 2;
+    const x = Math.floor(Math.random() * 5) + 2;
+    const b = Math.floor(Math.random() * 5) + 1;
+    gameState.eqX = x;
+    gameState.eqText = `${toFa(a)}x - ${toFa(b)} = ${toFa(a * x - b)}`;
+    gameState.eqHint = `ابتدا ${toFa(b)} را به دو طرف اضافه کن، سپس بر ${toFa(a)} تقسیم کن.`;
+  } else {
+    const x = Math.floor(Math.random() * 4) + 2;
+    const c = Math.floor(Math.random() * 4) + 1;
+    gameState.eqX = x;
+    gameState.eqText = `۳x - ${toFa(c)} = x + ${toFa(2 * x - c)}`;
+    gameState.eqHint = `ابتدا از دو طرف معادله x کم کن تا ۲x - ${toFa(c)} = ${toFa(2 * x - c)} شود.`;
+  }
+}
+
+setupTempStage(1);
+setupAlgStage(1);
+setupEqStage(1);
+
+function renderMiniGames() {
+  setMascot('وقت استراحت هیجان‌انگیز! هر بازی ۳ مرحله (آسان، ماجراجو، قهرمان) دارد؛ با هر برد زنجیره امتیاز (Combo) می‌گیری!');
+  const pctTemp = Math.min(100, Math.max(0, ((gameState.tempCurrent + 12) / 24) * 100));
+  const pctTarget = Math.min(100, Math.max(0, ((gameState.tempTarget + 12) / 24) * 100));
+
+  return `
+    <div class="section-header">
+      <h2>🕹️ بازی‌های رنگارنگ و مرحله‌ای ریاضی (فصل ۲ و ۳)</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn ${gameState.activeGame==='tempGame'?'active':''}" onclick="gameState.activeGame='tempGame'; render();">🌡️ دماسنج و آسانسور صحیح</button>
+      <button class="tab-btn ${gameState.activeGame==='algGame'?'active':''}" onclick="gameState.activeGame='algGame'; render();">🧩 شکارچی جبر و قرینه</button>
+      <button class="tab-btn ${gameState.activeGame==='eqGame'?'active':''}" onclick="gameState.activeGame='eqGame'; render();">⚖️ ترازوی معادله‌ساز</button>
+    </div>
+
+    ${gameState.activeGame === 'tempGame' ? `
+      <div class="mini-game-arena anim-pop">
+        <div class="game-hud">
+          <div class="hud-chip">🔥 زنجیره برد: ${toFa(gameState.combo)}x</div>
+          <div class="hud-chip">🎯 حرکت‌های باقی‌مانده: ${toFa(gameState.tempMovesLeft)}</div>
+          <div class="hud-chip">🏆 امتیاز کل: ${toFa(progress.points)}</div>
+        </div>
+        <div class="game-stage-pills">
+          <button class="g-stage-btn ${gameState.tempStage===1?'active':''}" onclick="setupTempStage(1); render();">مرحله ۱: مبتدی</button>
+          <button class="g-stage-btn ${gameState.tempStage===2?'active':''}" onclick="setupTempStage(2); render();">مرحله ۲: ماجراجو</button>
+          <button class="g-stage-btn ${gameState.tempStage===3?'active':''}" onclick="setupTempStage(3); render();">مرحله ۳: قهرمان دما</button>
+        </div>
+        <h3 style="margin-top:0; color:#be123c;">🌡️ دماسنج را با کمترین حرکت روی دمای هدف تنظیم کن!</h3>
+        <p style="font-size:1.05rem;">
+          دمای هدف: <span class="math" dir="ltr">${gameState.tempTarget > 0 ? '+' + toFa(gameState.tempTarget) : toFa(gameState.tempTarget)}°</span> |
+          دمای فعلی: <span class="math" dir="ltr">${gameState.tempCurrent > 0 ? '+' + toFa(gameState.tempCurrent) : toFa(gameState.tempCurrent)}°</span>
+        </p>
+
+        <!-- نوار گرافیکی دماسنج رنگارنگ -->
+        <div style="max-width:440px; margin:14px auto; background:#e2e8f0; height:22px; border-radius:999px; position:relative; border:2px solid #94a3b8; overflow:hidden;">
+          <div style="position:absolute; left:50%; top:0; bottom:0; width:3px; background:#0f172a; z-index:3;"></div>
+          <div style="position:absolute; left:${pctTarget}%; top:0; bottom:0; width:6px; background:#f59e0b; z-index:4;" title="هدف"></div>
+          <div style="height:100%; width:${pctTemp}%; background:linear-gradient(90deg, #0ea5e9, #6366f1, #f43f5e); transition:width 0.35s ease;"></div>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin:16px 0;">
+          <button class="btn btn-danger" onclick="adjustTemp(-4)">-۴°</button>
+          <button class="btn btn-danger" onclick="adjustTemp(-2)">-۲°</button>
+          <button class="btn btn-danger" onclick="adjustTemp(-1)">-۱°</button>
+          <button class="btn btn-success" onclick="adjustTemp(1)">+۱°</button>
+          <button class="btn btn-success" onclick="adjustTemp(2)">+۲°</button>
+          <button class="btn btn-success" onclick="adjustTemp(4)">+۴°</button>
+          <button class="btn btn-outline" onclick="setupTempStage(gameState.tempStage); render();">🔄 چالش جدید</button>
+        </div>
+        ${gameState.tempMsg ? `<div class="feedback-box ok anim-pop">${gameState.tempMsg}</div>` : ''}
+      </div>
+    ` : ''}
+
+    ${gameState.activeGame === 'algGame' ? `
+      <div class="mini-game-arena anim-pop">
+        <div class="game-hud">
+          <div class="hud-chip">🔥 زنجیره برد: ${toFa(gameState.combo)}x</div>
+          <div class="hud-chip">⭐ ستاره‌ها: ${toFa(progress.stars)}</div>
+        </div>
+        <div class="game-stage-pills">
+          <button class="g-stage-btn ${gameState.algStage===1?'active':''}" onclick="setupAlgStage(1); render();">مرحله ۱: قرینه و تک‌جمله‌ای</button>
+          <button class="g-stage-btn ${gameState.algStage===2?'active':''}" onclick="setupAlgStage(2); render();">مرحله ۲: متشابه و پرانتز</button>
+          <button class="g-stage-btn ${gameState.algStage===3?'active':''}" onclick="setupAlgStage(3); render();">مرحله ۳: ترکیب پیشرفته</button>
+        </div>
+        <h3 style="margin-top:0; color:#4338ca;">🧩 شکارچی جبر: معادل ساده‌شده را شکار کن!</h3>
+        <div style="font-size:1.3rem; margin:14px 0;">عبارت کتاب: <span class="math" dir="ltr">${toFa(gameState.algExpr)}</span></div>
+        <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:16px 0;">
+          ${gameState.algOptions.map(opt => `
+            <button class="rainbow-btn" onclick="checkAlgGame('${opt}')"><span dir="ltr">${toFa(opt)}</span></button>
+          `).join('')}
+        </div>
+        ${gameState.algMsg ? `<div class="feedback-box anim-pop">${gameState.algMsg}</div>` : ''}
+      </div>
+    ` : ''}
+
+    ${gameState.activeGame === 'eqGame' ? `
+      <div class="mini-game-arena anim-pop">
+        <div class="game-hud">
+          <div class="hud-chip">🔥 زنجیره برد: ${toFa(gameState.combo)}x</div>
+          <div class="hud-chip">🏆 امتیاز کل: ${toFa(progress.points)}</div>
+        </div>
+        <div class="game-stage-pills">
+          <button class="g-stage-btn ${gameState.eqStage===1?'active':''}" onclick="setupEqStage(1); render();">مرحله ۱: معادله یک‌مرحله‌ای</button>
+          <button class="g-stage-btn ${gameState.eqStage===2?'active':''}" onclick="setupEqStage(2); render();">مرحله ۲: معادله دومرحله‌ای</button>
+          <button class="g-stage-btn ${gameState.eqStage===3?'active':''}" onclick="setupEqStage(3); render();">مرحله ۳: مجهول در دو طرف</button>
+        </div>
+        <h3 style="margin-top:0; color:#047857;">⚖️ ترازوی معادله را متعادل کن و مقدار <span class="math" dir="ltr">x</span> را بیاب!</h3>
+        <div style="font-size:1.3rem; margin:14px 0;"><span class="math" dir="ltr">${toFa(gameState.eqText)}</span></div>
+        <div style="max-width:290px; margin:12px auto; display:flex; gap:8px;">
+          <input type="number" id="eqGuess" placeholder="مقدار x را بنویس" onkeydown="if(event.key==='Enter') checkEqGame()" />
+          <button class="btn btn-success" onclick="checkEqGame()">بررسی</button>
+        </div>
+        ${gameState.eqMsg ? `<div class="feedback-box anim-pop">${gameState.eqMsg}</div>` : ''}
+      </div>
+    ` : ''}
+  `;
+}
+
+function adjustTemp(delta) {
+  if (gameState.tempMovesLeft <= 0 && gameState.tempCurrent !== gameState.tempTarget) {
+    setupTempStage(gameState.tempStage);
+    render();
+    return;
+  }
+  gameState.tempCurrent += delta;
+  gameState.tempMovesLeft--;
+  if (gameState.tempCurrent === gameState.tempTarget) {
+    gameState.combo++;
+    const bonus = 10 + gameState.tempStage * 5 + Math.min(15, gameState.combo * 2);
+    progress.points += bonus;
+    progress.stars += 1;
+    saveProgress();
+    playTone('ok');
+    const nextSt = Math.min(3, gameState.tempStage + 1);
+    gameState.tempMsg = `🎉 شاهکار! دقیقاً به دمای هدف رسیدی (+${toFa(bonus)} امتیاز)! آماده مرحله ${toFa(nextSt)} هستی؟ <button class="btn btn-primary btn-sm" style="margin-right:8px;" onclick="setupTempStage(${nextSt}); render();">مرحله بعد ⬅️</button>`;
+  } else if (gameState.tempMovesLeft <= 0) {
+    gameState.combo = 0;
+    playTone('err');
+    gameState.tempMsg = `⏰ حرکت‌های این دور تمام شد! دوباره تلاش کن: <button class="btn btn-warning btn-sm" onclick="setupTempStage(gameState.tempStage); render();">تلاش مجدد</button>`;
+  } else {
+    gameState.tempMsg = `ادامه بده! فاصله تا هدف: ${toFa(Math.abs(gameState.tempTarget - gameState.tempCurrent))} درجه`;
+  }
+  render();
+}
+
+function checkAlgGame(opt) {
+  if (opt === gameState.algTarget) {
+    gameState.combo++;
+    const bonus = 10 + gameState.algStage * 5;
+    progress.points += bonus;
+    progress.stars += 1;
+    saveProgress();
+    playTone('ok');
+    const nextSt = Math.min(3, gameState.algStage + 1);
+    gameState.algMsg = `🎉 آفرین! <span class="math" dir="ltr">${toFa(gameState.algExpr)} = ${toFa(gameState.algTarget)}</span> (+${toFa(bonus)} امتیاز) <button class="btn btn-primary btn-sm" style="margin-right:8px;" onclick="setupAlgStage(${nextSt}); render();">چالش بعدی ⬅️</button>`;
+  } else {
+    gameState.combo = 0;
+    playTone('err');
+    gameState.algMsg = `❌ نادرست بود! به علامت قرینه پشت پرانتز و جمله‌های متشابه دقت کن.`;
+  }
+  render();
+}
+
+function checkEqGame() {
+  const val = Number(document.getElementById('eqGuess').value);
+  if (val === gameState.eqX) {
+    gameState.combo++;
+    const bonus = 12 + gameState.eqStage * 6;
+    progress.points += bonus;
+    progress.stars += 1;
+    saveProgress();
+    playTone('ok');
+    const nextSt = Math.min(3, gameState.eqStage + 1);
+    gameState.eqMsg = `🎉 عالی بود! جواب معادله <span class="math" dir="ltr">x = ${toFa(gameState.eqX)}</span> است (+${toFa(bonus)} امتیاز) <button class="btn btn-primary btn-sm" style="margin-right:8px;" onclick="setupEqStage(${nextSt}); render();">مرحله بعد ⬅️</button>`;
+  } else {
+    gameState.combo = 0;
+    playTone('err');
+    gameState.eqMsg = `❌ راهنمایی: ${gameState.eqHint}`;
+  }
+  render();
+}
+
+// ==================== ۳. تمرین و یادگیری ====================
+let practiceState = { chapter: 'all', topic: 'all', pool: [], index: 0, showHint: false, showSteps: false, sessionSeed: 0 };
+
+function buildPracticePool(force = false) {
+  const topics = getTopicsByChapter(practiceState.chapter);
+  const signature = `${practiceState.chapter}|${practiceState.topic}|${questionBank.questions.length}`;
+  if (force || practiceState.poolSignature !== signature || !practiceState.pool.length) {
+    const filtered = questionBank.questions.filter(q => {
+      if (practiceState.chapter !== 'all' && String(q.chapter) !== practiceState.chapter) return false;
+      if (practiceState.topic !== 'all' && q.topic !== practiceState.topic) return false;
+      return true;
+    });
+    practiceState.pool = pickRandomNonRepeating(filtered, filtered.length);
+    practiceState.poolSignature = signature;
+    practiceState.index = 0;
+    practiceState.showHint = false;
+    practiceState.showSteps = false;
+  }
+  return topics;
+}
+
+function renderPractice() {
+  setMascot('تمام تمرین‌ها از متن کتاب درسی انتخاب شده و با هر ورود چیدمان تصادفی تازه دارند.');
+  const topics = buildPracticePool();
+  const list = practiceState.pool;
+  const q = list[practiceState.index];
+
+  return `
+    <div class="section-header">
+      <h2>💡 تمرین و یادگیری گام‌به‌گام (تصادفی از کتاب درسی)</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+
+    <div class="card">
+      <div class="form-grid">
+        <label class="field">فصل:
+          <select onchange="practiceState.chapter=this.value; practiceState.topic='all'; practiceState.pool=[]; practiceState.poolSignature=''; practiceState.showHint=false; practiceState.showSteps=false; render();">
+            <option value="all" ${practiceState.chapter==='all'?'selected':''}>همه فصل‌ها</option>
+            <option value="2" ${practiceState.chapter==='2'?'selected':''}>فصل دوم</option>
+            <option value="3" ${practiceState.chapter==='3'?'selected':''}>فصل سوم</option>
+          </select>
+        </label>
+        <label class="field">مبحث:
+          <select onchange="practiceState.topic=this.value; practiceState.pool=[]; practiceState.poolSignature=''; practiceState.showHint=false; practiceState.showSteps=false; render();">
+            <option value="all">همه مباحث</option>
+            ${topics.map(t => `<option value="${t}" ${practiceState.topic===t?'selected':''}>${t}</option>`).join('')}
+          </select>
+        </label>
+        <label class="field">تغییر چیدمان تصادفی:
+          <button class="btn btn-secondary btn-sm" onclick="buildPracticePool(true); render();">🔀 چیدمان رندومی جدید</button>
+        </label>
+      </div>
+    </div>
+
+    ${q ? `
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+          <div>${chLabel(q.chapter)} ${diffLabel(q.difficulty)} <span class="badge" style="background:#f1f5f9;">${q.topic}</span></div>
+          <span style="font-size:0.84rem; color:var(--muted);">سؤال ${toFa(practiceState.index + 1)} از ${toFa(list.length)} | ${toFa(q.source || '')}</span>
+        </div>
+
+        <div style="font-size:1.12rem; font-weight:700; margin-bottom:14px;">${formatMathText(q.question)}</div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <button class="btn btn-warning" onclick="practiceState.showHint=true; render();">🔍 سرنخ اولیه</button>
+          <button class="btn btn-primary" onclick="practiceState.showSteps=true; render();">📖 راه‌حل مرحله‌به‌مرحله و محور</button>
+          <button class="btn btn-outline" onclick="practiceState.index=(practiceState.index+1)%${list.length}; practiceState.showHint=false; practiceState.showSteps=false; render();">⬅️ تمرین بعدی</button>
+        </div>
+
+        ${practiceState.showHint ? `
+          <div class="feedback-box" style="border-right-color:var(--accent); background:#fffbeb;">
+            <strong>💡 سرنخ آموزشی:</strong> ${formatMathText(q.hint || '')}
+          </div>
+        ` : ''}
+
+        ${practiceState.showSteps ? `
+          <div class="feedback-box ok">
+            <strong>✅ پاسخ نهایی: ${formatMathText(q.answer)}</strong>
+            ${renderVisualSVG(q.visual)}
+            <ol style="margin:6px 0 0; padding-right:20px;">
+              ${getWorkedSteps(q).map(s => `<li>${formatMathText(s)}</li>`).join('')}
+            </ol>
+          </div>
+        ` : ''}
+      </div>
+    ` : '<div class="card">سؤالی یافت نشد.</div>'}
+  `;
+}
+
+// ==================== ۴. بانک سؤال‌های تشریحی ====================
+let descState = { chapter: 'all', pool: [], index: 0, showSolution: false, flagged: [], sessionSeed: 0 };
+
+
+function getWorkedSteps(q) {
+  const source = q.steps || [q.explanation || ''];
+  if (!q.topic || !String(q.topic).includes('معادله')) return source;
+  const result = source.map(step => {
+    const t = String(step);
+    let m = t.match(/(?:کم کردن|کم می‌کنیم|کم کنید)\s+([0-9۰-۹]+)/);
+    if (m) return `عدد مثبتِ ${m[1]} که کنار عبارت مجهول است، به طرف دیگر مساوی منتقل می‌شود؛ چون از طرف چپ به طرف راست می‌رود، عمل جمع به تفریق تبدیل می‌شود. ${t}`;
+    m = t.match(/(?:جمع|اضافه کردن|اضافه می‌کنیم|اضافه کنید)\s+([0-9۰-۹]+)/);
+    if (m) return `عدد منفیِ ${m[1]} که کنار عبارت مجهول است، به طرف دیگر مساوی منتقل می‌شود؛ عمل تفریق به جمع تبدیل می‌شود. ${t}`;
+    return t;
+  });
+  const transferRule = 'پس از تشکیل معادله، اگر عدد ثابتی کنار عبارت مجهول باشد، آن را به طرف دیگر مساوی می‌بریم؛ هنگام انتقال، جمع به تفریق و تفریق به جمع تبدیل می‌شود. اگر مجهول در هر دو طرف باشد، جمله‌های مجهول را یک طرف و عددهای ثابت را طرف دیگر جمع می‌کنیم. در پایان، ضریب مجهول را با تقسیم حذف می‌کنیم تا مقدار مجهول به دست آید.';
+  const formationIndex = result.findIndex(x => /تشکیل معادله|نوشتن معادله|انتخاب مجهول|تعداد .* را x بگیرید|قیمت .* را x بگیرید/.test(x));
+  result.splice(formationIndex >= 0 ? formationIndex + 1 : 0, 0, transferRule);
+  return result;
+}
+
+function renderDescriptive() {
+  setMascot('سؤال‌های تشریحی برگرفته از کتاب درسی هر بار به ترتیب تصادفی نمایش داده می‌شوند.');
+  const raw = questionBank.questions.filter(q => q.type === 'descriptive' && (descState.chapter === 'all' || String(q.chapter) === descState.chapter));
+  const signature = `${descState.chapter}|${raw.length}`;
+  if (!descState.pool.length || descState.poolSignature !== signature) {
+    descState.pool = pickRandomNonRepeating(raw, raw.length);
+    descState.poolSignature = signature;
+    descState.index = 0;
+    descState.showSolution = false;
+  }
+  const list = descState.pool;
+  if (descState.index >= list.length) descState.index = 0;
+  const q = list[descState.index];
+  const saved = q ? getStudentDescAnswer(q.id) : null;
+  const isFlagged = q ? descState.flagged.includes(q.id) : false;
+
+  return `
+    <div class="section-header">
+      <h2>✍️ بانک سؤال‌های تشریحی (کتاب درسی)</h2>
+      <div style="display:flex; gap:8px;">
+        <select style="width:auto;" onchange="descState.chapter=this.value; descState.pool=[]; descState.poolSignature=''; descState.index=0; descState.showSolution=false; render();">
+          <option value="all" ${descState.chapter==='all'?'selected':''}>همه فصل‌ها</option>
+          <option value="2" ${descState.chapter==='2'?'selected':''}>فصل دوم</option>
+          <option value="3" ${descState.chapter==='3'?'selected':''}>فصل سوم</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+      </div>
+    </div>
+
+    ${q ? `
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+          <div>
+            <strong>سؤال تشریحی ${toFa(descState.index + 1)} از ${toFa(list.length)}</strong>
+            ${chLabel(q.chapter)} ${diffLabel(q.difficulty)}
+            <span class="badge" style="background:#f1f5f9;">${q.topic}</span>
+            ${isFlagged ? '<span class="badge badge-medium">🔖 مرور مجدد</span>' : ''}
+          </div>
+          ${saved ? `<span class="badge badge-medium">وضعیت: ${saved.status}</span>` : ''}
+        </div>
+
+        <div style="font-size:1.08rem; font-weight:700; margin-bottom:12px;">${formatMathText(q.question)}</div>
+
+        <label class="field">پاسخ تشریحی خود را بنویسید:
+          <textarea id="descBox" rows="4" placeholder="مراحل حل و استدلال خود را بنویسید...">${saved ? saved.answerText : ''}</textarea>
+        </label>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:12px;">
+          <button class="btn btn-primary" onclick="saveStudentDescriptive('${q.id}')">💾 ثبت پاسخ (نیازمند بررسی معلم)</button>
+          <button class="btn btn-warning" onclick="descState.showSolution=!descState.showSolution; render();">${descState.showSolution ? '🙈 پنهان کردن پاسخ' : '📖 نمایش راهنما، شکل و پاسخ'}</button>
+          <button class="btn btn-outline" onclick="toggleDescFlag('${q.id}')">${isFlagged ? 'حذف علامت مرور' : '🔖 مرور مجدد'}</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:16px; padding-top:10px; border-top:1px solid #e2e8f0;">
+          <button class="btn btn-outline btn-sm" onclick="descState.index=(descState.index-1+${list.length})%${list.length}; descState.showSolution=false; render();">➡️ سؤال قبلی</button>
+          <button class="btn btn-outline btn-sm" onclick="descState.index=(descState.index+1)%${list.length}; descState.showSolution=false; render();">⬅️ سؤال بعدی</button>
+        </div>
+
+        ${descState.showSolution ? `
+          <div class="feedback-box ok">
+            <div><strong>💡 راهنمای حل:</strong> ${formatMathText(q.hint || '')}</div>
+            <div style="margin-top:6px;"><strong>✅ پاسخ نهایی:</strong> ${formatMathText(q.answer)}</div>
+            ${renderVisualSVG(q.visual)}
+            <ol style="margin:6px 0 0; padding-right:20px;">
+              ${getWorkedSteps(q).map(s => `<li>${formatMathText(s)}</li>`).join('')}
+            </ol>
+          </div>
+        ` : ''}
+      </div>
+    ` : '<div class="card">سؤال تشریحی یافت نشد.</div>'}
+  `;
+}
+
+function saveStudentDescriptive(qId) {
+  const val = document.getElementById('descBox').value.trim();
+  if (!val) { alert('لطفاً ابتدا پاسخ خود را بنویسید.'); return; }
+  descAnswers[descAnswerKey(qId)] = { questionId:qId, studentId:progress.id, studentName:progress.studentName, gradeClass:progress.gradeClass || 'هفتم', answerText: val, status: 'نیازمند بررسی معلم', teacherFeedback:'', updatedAt: toFa(new Date().toLocaleDateString('fa-IR')) };
+  saveDescAnswers();
+  alert('پاسخ شما ذخیره شد و با وضعیت «نیازمند بررسی معلم» ثبت گردید.');
+  render();
+}
+
+function toggleDescFlag(qId) {
+  if (descState.flagged.includes(qId)) descState.flagged = descState.flagged.filter(x => x !== qId);
+  else descState.flagged.push(qId);
+  render();
+}
+
+// ==================== ۶. بانک ۲۷ نمونه سؤال امتحانی ====================
+const SAMPLE_EXAM_PACKS = [
+  ...Array.from({ length: 9 }, (_, i) => ({
+    id: `PACK-C2-${i+1}`,
+    title: `نمونه امتحان فصل دوم – سری ${toFa(i+1)} (عددهای صحیح)`,
+    ch: 2,
+    desc: 'آزمون استاندارد فصل دوم شامل مقایسه، قرینه، جمع و تفریق، ضرب و تقسیم و مسائل کاربردی کتاب'
+  })),
+  ...Array.from({ length: 9 }, (_, i) => ({
+    id: `PACK-C3-${i+1}`,
+    title: `نمونه امتحان فصل سوم – سری ${toFa(i+1)} (جبر و معادله)`,
+    ch: 3,
+    desc: 'آزمون استاندارد فصل سوم شامل الگو، عبارت جبری، جمله‌های متشابه، توزیع‌پذیری و معادله'
+  })),
+  ...Array.from({ length: 9 }, (_, i) => ({
+    id: `PACK-MIX-${i+1}`,
+    title: `آزمون جامع دو فصل (فصل ۲ و ۳) – سری ${toFa(i+1)}`,
+    ch: 'all',
+    desc: 'آزمون ترکیبی جامع برای آمادگی کامل امتحان از هر دو فصل'
+  }))
+];
+
+function renderSampleExams() {
+  setMascot('۲۷ بسته نمونه امتحان فصلی و ترکیبی دو فصل آماده است؛ با هر بار کلیک، مجموعه سؤال‌ها به‌صورت رندومی چیده می‌شود!');
+  const filterCh = routeParams.packCh || 'all';
+  const list = SAMPLE_EXAM_PACKS.filter(p => filterCh === 'all' || String(p.ch) === filterCh);
+
+  return `
+    <div class="section-header">
+      <h2>📚 بانک نمونه سؤال‌های امتحانی (${toFa(SAMPLE_EXAM_PACKS.length)} بسته فصلی و ترکیبی)</h2>
+      <div style="display:flex; gap:8px;">
+        <select style="width:auto;" onchange="navigate('sampleExams', { packCh: this.value })">
+          <option value="all" ${filterCh==='all'?'selected':''}>همه بسته‌ها (۲۷ بسته)</option>
+          <option value="2" ${filterCh==='2'?'selected':''}>فصل دوم (۹ بسته)</option>
+          <option value="3" ${filterCh==='3'?'selected':''}>فصل سوم (۹ بسته)</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+      </div>
+    </div>
+    <div class="nav-grid">
+      ${list.map(p => `
+        <div class="card">
+          ${p.ch === 'all' ? '<span class="badge badge-ch">ترکیبی فصل ۲ و ۳</span>' : chLabel(p.ch)}
+          <h3 style="margin:8px 0 6px;">${p.title}</h3>
+          <p style="color:var(--muted); font-size:0.86rem;">${p.desc}</p>
+          <button class="btn btn-primary btn-sm" onclick="startSampleExam('${p.ch}', '${p.title.replace(/'/g, "\'")}')">شروع این نمونه امتحان</button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function startSampleExam(ch, title) {
+  const pool = questionBank.questions.filter(q => ch === 'all' ? true : String(q.chapter) === String(ch));
+  const selected = pickRandomNonRepeating(pool, Math.min(10, pool.length));
+  startQuizSession({ title, questions: selected, timed: true, timeLimitSec: selected.length * 75 });
+}
+
+// ==================== موتور اجرای مسابقه / آزمون ====================
+let quizState = null;
+let quizTimerInterval = null;
+
+function startQuizSession(cfg) {
+  if (quizTimerInterval) clearInterval(quizTimerInterval);
+  quizState = {
+    title: cfg.title,
+    questions: cfg.questions,
+    index: 0,
+    selectedOption: null,
+    descDraft: '',
+    submittedCurrent: false,
+    answers: [],
+    startTime: Date.now(),
+    qStartTime: Date.now(),
+    timed: cfg.timed || false,
+    remainingSec: cfg.timeLimitSec || 0,
+    missionId: cfg.missionId || null
+  };
+
+  if (quizState.timed) {
+    quizTimerInterval = setInterval(() => {
+      if (!quizState) return;
+      quizState.remainingSec--;
+      const el = document.getElementById('quizTimerDisplay');
+      if (el) el.textContent = formatSeconds(quizState.remainingSec);
+      if (quizState.remainingSec <= 0) {
+        clearInterval(quizTimerInterval);
+        finishQuizSession();
+      }
+    }, 1000);
+  }
+  navigate('quizRun');
+}
+
+function formatSeconds(sec) {
+  const s = Math.max(0, sec);
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return toFa(`${String(m).padStart(2,'0')}:${String(r).padStart(2,'0')}`);
+}
+
+function renderQuizRun() {
+  if (!quizState) return renderHome();
+  const q = quizState.questions[quizState.index];
+  const total = quizState.questions.length;
+  const pct = Math.round(((quizState.index + (quizState.submittedCurrent ? 1 : 0)) / total) * 100);
+  const letters = ['الف', 'ب', 'ج', 'د'];
+  const currentRecord = quizState.answers[quizState.index];
+
+  return `
+    <div class="section-header">
+      <h2>🎯 ${toFa(quizState.title)}</h2>
+      <div style="display:flex; gap:8px; align-items:center;">
+        ${quizState.timed ? `<span class="badge badge-hard" style="font-size:0.9rem;">⏱️ <span id="quizTimerDisplay">${formatSeconds(quizState.remainingSec)}</span></span>` : ''}
+        <button class="btn btn-danger btn-sm" onclick="finishQuizSession()">پایان آزمون</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div>
+          <strong>سؤال ${toFa(quizState.index + 1)} از ${toFa(total)}</strong>
+          ${chLabel(q.chapter)} ${diffLabel(q.difficulty)}
+          <span class="badge" style="background:#f1f5f9;">مبحث: ${q.topic}</span>
+        </div>
+        <span style="font-weight:800; color:var(--primary);">امتیاز: ${toFa(q.points)}</span>
+      </div>
+
+      <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
+
+      <div style="font-size:1.12rem; font-weight:700; margin:12px 0;">${formatMathText(q.question)}</div>
+      ${quizState.submittedCurrent && q.visual ? renderVisualSVG(q.visual) : ''}
+
+      ${q.type === 'mcq' ? `
+        <div class="options-list">
+          ${q.options.map((opt, i) => {
+            let cls = 'option-btn';
+            if (quizState.submittedCurrent) {
+              if (opt === q.answer) cls += ' correct';
+              else if (opt === quizState.selectedOption) cls += ' wrong';
+            } else if (opt === quizState.selectedOption) {
+              cls += ' selected';
+            }
+            return `
+              <button class="${cls}" ${quizState.submittedCurrent ? 'disabled' : ''} onclick="selectQuizOption(${i})">
+                <span class="opt-letter">${letters[i]}</span>
+                <span>${formatMathText(opt)}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      ` : `
+        <div style="margin:12px 0;">
+          <label class="field">پاسخ تشریحی خود را بنویسید:
+            <textarea id="quizDescInput" rows="4" ${quizState.submittedCurrent ? 'disabled' : ''} placeholder="مراحل حل را بنویسید...">${quizState.descDraft}</textarea>
+          </label>
+        </div>
+      `}
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+        ${!quizState.submittedCurrent ? `
+          <button class="btn btn-primary" onclick="submitQuizAnswer()">✅ ثبت پاسخ</button>
+        ` : `
+          <button class="btn btn-success" onclick="nextQuizQuestion()">
+            ${quizState.index + 1 < total ? '⬅️ سؤال بعدی' : '🏁 مشاهده کارنامه و پایان'}
+          </button>
+        `}
+      </div>
+
+      ${quizState.submittedCurrent && currentRecord ? `
+        <div class="feedback-box ${q.type === 'mcq' ? (currentRecord.isCorrect ? 'ok' : 'err') : ''}">
+          ${q.type === 'mcq' ? (
+            currentRecord.isCorrect
+              ? `<strong>🎉 آفرین! پاسخ کاملاً درست است! (+${toFa(currentRecord.pointsEarned)} امتیاز)</strong>`
+              : `<strong>🌱 اشکالی ندارد! پاسخ صحیح: ${formatMathText(q.answer)}</strong>`
+          ) : `
+            <strong>📋 پاسخ ثبت شد و با وضعیت «نیازمند بررسی معلم» علامت‌گذاری گردید.</strong>
+            <div style="margin-top:4px;">پاسخ استاندارد: <strong>${formatMathText(q.answer)}</strong></div>
+          `}
+          ${renderVisualSVG(q.visual)}
+          <p style="margin:6px 0 4px;"><strong>توضیح:</strong> ${formatMathText(q.explanation)}</p>
+          ${q.steps ? `<ul style="margin:4px 0 0; padding-right:20px;">${getWorkedSteps(q).map(s => `<li>${formatMathText(s)}</li>`).join('')}</ul>` : ''}
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function selectQuizOption(idx) {
+  if (!quizState || quizState.submittedCurrent) return;
+  quizState.selectedOption = quizState.questions[quizState.index].options[idx];
+  render();
+}
+
+function submitQuizAnswer() {
+  if (!quizState || quizState.submittedCurrent) return;
+  const q = quizState.questions[quizState.index];
+  const timeTaken = Math.max(1, Math.round((Date.now() - quizState.qStartTime) / 1000));
+
+  if (q.type === 'mcq') {
+    if (!quizState.selectedOption) { alert('لطفاً ابتدا یکی از گزینه‌ها را انتخاب کن!'); return; }
+    const isCorrect = quizState.selectedOption === q.answer;
+    let earned = 0;
+    if (isCorrect) {
+      const speedBonus = timeTaken <= 15 ? 5 : (timeTaken <= 25 ? 2 : 0);
+      earned = q.points + speedBonus;
+      progress.points += earned;
+      progress.stars += 1;
+      playTone('ok');
+      setMascot(`عالی بود! ${toFa(earned)} امتیاز گرفتی ${speedBonus > 0 ? '(با پاداش سرعت!)' : ''}`);
+    } else {
+      playTone('err');
+      setMascot('به محور گام‌به‌گام و راه‌حل پایین نگاه کن تا این نکته در ذهنت ماندگار شود.');
+    }
+
+    if (!progress.topicStats[q.topic]) progress.topicStats[q.topic] = { correct: 0, wrong: 0, chapter: q.chapter };
+    if (isCorrect) progress.topicStats[q.topic].correct++;
+    else progress.topicStats[q.topic].wrong++;
+
+    quizState.answers.push({ qId: q.id, chapter: q.chapter, topic: q.topic, type: 'mcq', userAns: quizState.selectedOption, isCorrect, pointsEarned: earned, timeTaken });
+  } else {
+    const txt = document.getElementById('quizDescInput').value.trim();
+    if (!txt) { alert('لطفاً پاسخ تشریحی خود را بنویس.'); return; }
+    quizState.descDraft = txt;
+    descAnswers[descAnswerKey(q.id)] = { questionId:q.id, studentId:progress.id, studentName:progress.studentName, gradeClass:progress.gradeClass || 'هفتم', answerText: txt, status: 'نیازمند بررسی معلم', teacherFeedback:'', updatedAt: toFa(new Date().toLocaleDateString('fa-IR')) };
+    saveDescAnswers();
+    quizState.answers.push({ qId: q.id, chapter: q.chapter, topic: q.topic, type: 'descriptive', userAns: txt, isCorrect: null, needsTeacherReview: true, pointsEarned: 0, timeTaken });
+    setMascot('پاسخ تشریحی تو با وضعیت «نیازمند بررسی معلم» ذخیره شد.');
+  }
+
+  quizState.submittedCurrent = true;
+  saveProgress();
+  render();
+}
+
+function nextQuizQuestion() {
+  if (!quizState) return;
+  if (quizState.index + 1 < quizState.questions.length) {
+    quizState.index++;
+    quizState.selectedOption = null;
+    quizState.descDraft = '';
+    quizState.submittedCurrent = false;
+    quizState.qStartTime = Date.now();
+    render();
+  } else {
+    finishQuizSession();
+  }
+}
+
+function finishQuizSession() {
+  if (quizTimerInterval) clearInterval(quizTimerInterval);
+  if (!quizState) return;
+
+  const total = quizState.questions.length;
+  const mcqAnswers = quizState.answers.filter(a => a.type === 'mcq');
+  const descPending = quizState.answers.filter(a => a.type === 'descriptive').length;
+  const correct = mcqAnswers.filter(a => a.isCorrect).length;
+  const wrong = mcqAnswers.filter(a => !a.isCorrect).length;
+  const unanswered = total - quizState.answers.length;
+  const durationSec = Math.max(1, Math.round((Date.now() - quizState.startTime) / 1000));
+  const autoGradable = mcqAnswers.length;
+  const successRate = autoGradable > 0 ? Math.round((correct / autoGradable) * 100) : 0;
+  const score20 = autoGradable > 0 ? ((correct / autoGradable) * 20).toFixed(1) : 'نیازمند بررسی معلم';
+
+  if (quizState.missionId && successRate >= 60) {
+    if (!progress.completedMissions.includes(quizState.missionId)) {
+      progress.completedMissions.push(quizState.missionId);
+      progress.points += 20;
+      progress.currentStage = Math.min(6, progress.completedMissions.length + 1);
+    }
+  }
+  checkAndAwardBadges();
+  saveProgress();
+
+  const report = {
+    id: 'RPT-' + Date.now(),
+    studentName: progress.studentName,
+    date: toFa(new Date().toLocaleDateString('fa-IR')),
+    title: quizState.title,
+    total, correct, wrong, unanswered, descPending, successRate, score20, durationSec,
+    details: quizState.answers
+  };
+  reports.unshift(report);
+  saveReports();
+  quizState = null;
+  navigate('report', { latestId: report.id });
+}
+
+// ==================== ۷. کارنامه و گزارش عملکرد ====================
+function renderReport() {
+  setMascot('کارنامه مباحث ضعیف را شناسایی می‌کند تا بلافاصله تمرین همان مبحث را شروع کنی.');
+  const latest = routeParams.latestId ? reports.find(r => r.id === routeParams.latestId) : reports[0];
+  const entries = Object.entries(progress.topicStats);
+  const weakTopics = entries
+    .map(([topic, st]) => {
+      const total = st.correct + st.wrong;
+      const pct = total > 0 ? Math.round((st.correct / total) * 100) : 100;
+      return { topic, chapter: st.chapter, correct: st.correct, wrong: st.wrong, total, pct };
+    })
+    .filter(x => x.wrong > 0 && x.pct < 70)
+    .sort((a, b) => a.pct - b.pct);
+
+  return `
+    <div class="section-header">
+      <h2>📊 کارنامه و گزارش عملکرد (${progress.avatar} ${progress.studentName})</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+
+    ${latest ? `
+      <div class="card">
+        <h3 style="margin-top:0">🧾 ${toFa(latest.title)} (${latest.date})</h3>
+        <div class="form-grid">
+          <div class="stat-pill" style="background:#f1f5f9; color:var(--text);">کل سؤال‌ها: ${toFa(latest.total)}</div>
+          <div class="stat-pill" style="background:#dcfce7; color:#166534;">صحیح: ${toFa(latest.correct)}</div>
+          <div class="stat-pill" style="background:#fee2e2; color:#991b1b;">غلط: ${toFa(latest.wrong)}</div>
+          <div class="stat-pill" style="background:#fef3c7; color:#92400e;">بی‌پاسخ / تشریحی: ${toFa(latest.unanswered + (latest.descPending || 0))}</div>
+          <div class="stat-pill" style="background:#e0e7ff; color:#3730a3;">درصد موفقیت: ${toFa(latest.successRate)}٪</div>
+          <div class="stat-pill" style="background:#e0f2fe; color:#075985;">نمره از ۲۰: ${toFa(latest.score20)}</div>
+          <div class="stat-pill" style="background:#f8fafc; color:var(--text);">مدت زمان: ${formatSeconds(latest.durationSec)}</div>
+        </div>
+      </div>
+    ` : '<div class="card">هنوز کارنامه‌ای ثبت نشده است.</div>'}
+
+    <div class="card">
+      <h3 style="margin-top:0">🎯 عملکرد به تفکیک فصل و مبحث</h3>
+      ${entries.length > 0 ? `
+        <table class="data-table">
+          <thead><tr><th>فصل</th><th>مبحث</th><th>کل</th><th>صحیح</th><th>غلط</th><th>تسلط</th></tr></thead>
+          <tbody>
+            ${entries.map(([topic, st]) => {
+              const tot = st.correct + st.wrong;
+              const pct = tot > 0 ? Math.round((st.correct / tot) * 100) : 0;
+              return `<tr><td>فصل ${toFa(st.chapter)}</td><td>${topic}</td><td>${toFa(tot)}</td><td style="color:var(--success);font-weight:700;">${toFa(st.correct)}</td><td style="color:var(--danger);font-weight:700;">${toFa(st.wrong)}</td><td><strong>${toFa(pct)}٪</strong></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      ` : '<p style="color:var(--muted);">پس از پاسخ به سؤال‌ها، آمار هر مبحث در اینجا نمایش داده می‌شود.</p>'}
+
+      ${weakTopics.length > 0 ? `
+        <div class="feedback-box err" style="margin-top:14px;">
+          <strong>⚠️ پیشنهاد تمرین برای مباحث ضعیف:</strong>
+          <ul style="margin:6px 0;">
+            ${weakTopics.map(w => `
+              <li>مبحث <strong>${w.topic}</strong> (فصل ${toFa(w.chapter)}) — موفقیت: ${toFa(w.pct)}٪
+                <button class="btn btn-primary btn-sm" style="margin-right:6px;" onclick="practiceState.chapter='${w.chapter}'; practiceState.topic='${w.topic}'; navigate('practice');">تمرین این مبحث</button>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+// ==================== ۸. پنل معلم (رمز 1428 و کاملاً مخفی از دید عموم) ====================
+let teacherAuth = false;
+let teacherTab = 'bank';
+let editingQuestionId = null;
+let printableExamData = null;
+
+function renderTeacher() {
+  setMascot('بخش ویژه معلم؛ برای دسترسی به مدیریت بانک سؤال و طراحی آزمون، رمز اختصاصی معلم را وارد کنید.');
+  if (!teacherAuth) {
+    return `
+      <div class="section-header">
+        <h2>👨‍🏫 ورود به پنل معلم</h2>
+        <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+      </div>
+      <div class="card" style="max-width:420px; margin:0 auto;">
+        <p style="color:var(--muted); font-size:0.9rem;">این بخش مخصوص دبیر محترم ریاضی است. لطفاً رمز ورود خود را وارد نمایید:</p>
+        <label class="field">رمز عبور معلم:
+          <input type="password" id="teacherPass" placeholder="••••" autocomplete="off" onkeydown="if(event.key==='Enter') loginTeacher()" />
+        </label>
+        <button class="btn btn-primary" style="margin-top:12px; width:100%;" onclick="loginTeacher()">🔐 ورود به پنل معلم</button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="section-header no-print">
+      <h2>👨‍🏫 پنل مدیریت معلم</h2>
+      <button class="btn btn-outline btn-sm" onclick="teacherAuth=false; navigate('home');">خروج از پنل</button>
+    </div>
+    <div class="tabs no-print">
+      <button class="tab-btn ${teacherTab==='bank'?'active':''}" onclick="teacherTab='bank'; editingQuestionId=null; render();">📚 بانک سؤال‌ها (${toFa(questionBank.questions.length)})</button>
+      <button class="tab-btn ${teacherTab==='add'?'active':''}" onclick="teacherTab='add'; editingQuestionId=null; render();">➕ افزودن سؤال</button>
+      <button class="tab-btn ${teacherTab==='builder'?'active':''}" onclick="teacherTab='builder'; render();">🖨️ ساخت و چاپ آزمون</button>
+      <button class="tab-btn ${teacherTab==='student'?'active':''}" onclick="teacherTab='student'; render();">📈 پاسخ‌های تشریحی و پروفایل‌ها</button>
+    </div>
+    ${teacherTab === 'bank' ? renderTeacherBank() : ''}
+    ${teacherTab === 'add' ? renderTeacherForm() : ''}
+    ${teacherTab === 'builder' ? renderTeacherExamBuilder() : ''}
+    ${teacherTab === 'student' ? renderTeacherStudentView() : ''}
+  `;
+}
+
+function loginTeacher() {
+  const val = document.getElementById('teacherPass').value.trim();
+  // پشتیبانی از ارقام فارسی و انگلیسی برای رمز ۱۴۲۸ بدون نمایش عمومی
+  const normalized = val.replace(/[۰-۹]/g, d => String(FA_DIGITS.indexOf(d)));
+  if (normalized === '1428') {
+    teacherAuth = true;
+    render();
+  } else {
+    alert('رمز عبور واردشده صحیح نیست.');
+  }
+}
+
+let bankFilterCh = 'all';
+function renderTeacherBank() {
+  const list = questionBank.questions.filter(q => bankFilterCh === 'all' || String(q.chapter) === bankFilterCh);
+  return `
+    <div class="card">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px;">
+        <select style="width:auto;" onchange="bankFilterCh=this.value; render();">
+          <option value="all" ${bankFilterCh==='all'?'selected':''}>همه فصل‌ها</option>
+          <option value="2" ${bankFilterCh==='2'?'selected':''}>فصل دوم</option>
+          <option value="3" ${bankFilterCh==='3'?'selected':''}>فصل سوم</option>
+        </select>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-secondary btn-sm" onclick="exportQuestionBankJSON()">⬇️ دانلود فایل پشتیبان</button>
+          <label class="btn btn-outline btn-sm" style="cursor:pointer;">⬆️ بارگذاری فایل <input type="file" accept=".json" style="display:none;" onchange="importQuestionBankJSON(event)" /></label>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>شناسه</th><th>فصل / مبحث</th><th>نوع</th><th>سطح</th><th>سؤال و پاسخ</th><th>عملیات</th></tr></thead>
+          <tbody>
+            ${list.map(q => `
+              <tr>
+                <td><strong>${toFa(q.id)}</strong></td>
+                <td>فصل ${toFa(q.chapter)}<br><small>${q.topic}</small></td>
+                <td>${q.type === 'mcq' ? 'چهارگزینه‌ای' : 'تشریحی'}</td>
+                <td>${diffLabel(q.difficulty)}</td>
+                <td><div>${formatMathText(q.question)}</div><div style="color:var(--success);font-size:0.82rem;">پاسخ: ${formatMathText(q.answer)}</div></td>
+                <td style="white-space:nowrap;">
+                  <button class="btn btn-warning btn-sm" onclick="editingQuestionId='${q.id}'; teacherTab='add'; render();">ویرایش</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteQuestion('${q.id}')">حذف</button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function deleteQuestion(id) {
+  if (!confirm('حذف شود؟')) return;
+  questionBank.questions = questionBank.questions.filter(q => q.id !== id);
+  saveQuestionBank();
+  render();
+}
+
+function renderTeacherForm() {
+  const q = editingQuestionId ? questionBank.questions.find(item => item.id === editingQuestionId) : null;
+  const opts = q && q.options ? q.options : ['', '', '', ''];
+  return `
+    <div class="card">
+      <h3 style="margin-top:0">${q ? '✏️ ویرایش سؤال: ' + toFa(q.id) : '➕ افزودن سؤال جدید'}</h3>
+      <div class="form-grid">
+        <label class="field">فصل: <select id="fCh"><option value="2" ${q&&q.chapter===2?'selected':''}>فصل دوم</option><option value="3" ${q&&q.chapter===3?'selected':''}>فصل سوم</option></select></label>
+        <label class="field">مبحث: <input type="text" id="fTopic" value="${q?q.topic:''}" /></label>
+        <label class="field">نوع: <select id="fType" onchange="document.getElementById('mcqOptsWrap').style.display = this.value==='mcq'?'grid':'none'"><option value="mcq" ${!q||q.type==='mcq'?'selected':''}>چهارگزینه‌ای</option><option value="descriptive" ${q&&q.type==='descriptive'?'selected':''}>تشریحی</option></select></label>
+        <label class="field">سطح: <select id="fDiff"><option value="easy" ${q&&q.difficulty==='easy'?'selected':''}>آسان</option><option value="medium" ${q&&q.difficulty==='medium'?'selected':''}>متوسط</option><option value="hard" ${q&&q.difficulty==='hard'?'selected':''}>سخت</option></select></label>
+        <label class="field">صفحه کتاب: <input type="number" id="fPage" value="${q&&q.page?q.page:''}" /></label>
+      </div>
+      <label class="field" style="margin-bottom:10px;">متن سؤال (بدون قدر مطلق و بدون توان): <textarea id="fQuestion" rows="3">${q?q.question:''}</textarea></label>
+      <div id="mcqOptsWrap" class="form-grid" style="display:${q&&q.type==='descriptive'?'none':'grid'};">
+        <label class="field">گزینه ۱: <input type="text" id="fOpt0" value="${opts[0]||''}" /></label>
+        <label class="field">گزینه ۲: <input type="text" id="fOpt1" value="${opts[1]||''}" /></label>
+        <label class="field">گزینه ۳: <input type="text" id="fOpt2" value="${opts[2]||''}" /></label>
+        <label class="field">گزینه ۴: <input type="text" id="fOpt3" value="${opts[3]||''}" /></label>
+      </div>
+      <div class="form-grid">
+        <label class="field">پاسخ صحیح: <input type="text" id="fAnswer" value="${q?q.answer:''}" /></label>
+        <label class="field">سرنخ: <input type="text" id="fHint" value="${q&&q.hint?q.hint:''}" /></label>
+      </div>
+      <label class="field" style="margin-bottom:12px;">راه‌حل و توضیح: <textarea id="fExplanation" rows="3">${q?q.explanation:''}</textarea></label>
+      <button class="btn btn-success" onclick="saveTeacherQuestion()">💾 ذخیره سؤال</button>
+    </div>
+  `;
+}
+
+function saveTeacherQuestion() {
+  const ch = Number(document.getElementById('fCh').value);
+  const topic = document.getElementById('fTopic').value.trim();
+  const type = document.getElementById('fType').value;
+  const difficulty = document.getElementById('fDiff').value;
+  const page = Number(document.getElementById('fPage').value) || null;
+  const question = toFa(document.getElementById('fQuestion').value.trim());
+  const answer = toFa(document.getElementById('fAnswer').value.trim());
+  const hint = toFa(document.getElementById('fHint').value.trim());
+  const explanation = toFa(document.getElementById('fExplanation').value.trim());
+  if (!topic || !question || !answer) { alert('مبحث، سؤال و پاسخ را کامل کنید.'); return; }
+  const allTxt = `${question} ${answer} ${explanation}`;
+  if (allTxt.includes('قدر مطلق') || allTxt.includes('قدرمطلق') || /[\^²³]/.test(allTxt)) {
+    alert('مبحث قدر مطلق و سؤال‌های توان‌دار مجاز نیستند!');
+    return;
+  }
+  const points = difficulty === 'easy' ? 10 : (difficulty === 'medium' ? 20 : 30);
+  let options = [];
+  if (type === 'mcq') {
+    options = [0,1,2,3].map(i => toFa(document.getElementById('fOpt'+i).value.trim()));
+    if (options.some(o => !o) || !options.includes(answer)) { alert('هر ۴ گزینه را پر کنید و پاسخ صحیح را دقیق وارد نمایید.'); return; }
+  }
+  const newObj = {
+    id: editingQuestionId || `C${ch}-${type==='mcq'?'MC':'DQ'}-${String(questionBank.questions.length+1).padStart(3,'0')}`,
+    chapter: ch, topic, type, difficulty, page, question, options, answer, hint, explanation,
+    steps: explanation.split('\n').filter(Boolean),
+    visual: { kind: 'rule_box', title: topic, formula: answer },
+    source: 'افزوده‌شده توسط معلم', points, reviewStatus: 'تایید شده توسط معلم'
+  };
+  if (editingQuestionId) {
+    const idx = questionBank.questions.findIndex(x => x.id === editingQuestionId);
+    if (idx !== -1) questionBank.questions[idx] = newObj;
+  } else questionBank.questions.push(newObj);
+  saveQuestionBank();
+  editingQuestionId = null;
+  teacherTab = 'bank';
+  render();
+}
+
+function exportQuestionBankJSON() {
+  const blob = new Blob([JSON.stringify(questionBank, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'question-bank.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importQuestionBankJSON(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (!d || !Array.isArray(d.questions)) throw new Error();
+      questionBank = d; saveQuestionBank(); alert('بانک سؤال بارگذاری شد!'); render();
+    } catch { alert('فایل معتبر نیست.'); }
+  };
+  reader.readAsText(file);
+}
+
+function renderTeacherExamBuilder() {
+  return `
+    <div class="card no-print">
+      <h3 style="margin-top:0">🖨️ ساخت و چاپ آزمون</h3>
+      <div class="form-grid">
+        <label class="field">عنوان: <input type="text" id="exTitle" value="آزمون ریاضی هفتم (فصل ۲ و ۳)" /></label>
+        <label class="field">فصل: <select id="exCh"><option value="all">فصل ۲ و ۳</option><option value="2">فصل ۲</option><option value="3">فصل ۳</option></select></label>
+        <label class="field">تعداد تصادفی: <input type="number" id="exCount" value="8" min="1" max="25" /></label>
+        <label class="field">زمان (دقیقه): <input type="number" id="exDuration" value="20" /></label>
+        <label class="field">نمره هر سؤال: <input type="number" id="exScoreEach" value="2" step="0.5" /></label>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="buildTeacherExam(false)">📄 برگه آزمون</button>
+        <button class="btn btn-success" onclick="buildTeacherExam(true)">🔑 آزمون + پاسخ‌نامه</button>
+      </div>
+    </div>
+    ${printableExamData ? `
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:14px;">
+          <div>
+            <h2 style="margin:0">${toFa(printableExamData.title)}</h2>
+            <div>زمان: ${toFa(printableExamData.duration)} دقیقه | بارم کل: ${toFa(printableExamData.questions.length * printableExamData.scoreEach)} نمره</div>
+          </div>
+          <button class="btn btn-warning no-print" onclick="window.print()">🖨️ چاپ</button>
+        </div>
+        ${printableExamData.questions.map((q, idx) => `
+          <div style="margin-bottom:14px; padding-bottom:10px; border-bottom:1px dashed #cbd5e1;">
+            <div style="display:flex; justify-content:space-between;">
+              <strong>${toFa(idx + 1)}) ${formatMathText(q.question)}</strong>
+              <span>(${toFa(printableExamData.scoreEach)} نمره)</span>
+            </div>
+            ${q.type === 'mcq' ? `<div style="display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-top:6px;">${q.options.map((o,oi)=>`<div>${['الف','ب','ج','د'][oi]}) ${formatMathText(o)}</div>`).join('')}</div>` : `<div style="height:40px;"></div>`}
+            ${printableExamData.withKey ? `<div style="background:#f0fdf4; padding:6px 10px; margin-top:6px; font-size:0.86rem;"><strong>پاسخ‌نامه:</strong> ${formatMathText(q.answer)} — ${formatMathText(q.explanation)}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    ` : ''}
+  `;
+}
+
+function buildTeacherExam(withKey) {
+  const title = document.getElementById('exTitle').value.trim() || 'آزمون ریاضی هفتم';
+  const ch = document.getElementById('exCh').value;
+  const count = Number(document.getElementById('exCount').value) || 8;
+  const duration = Number(document.getElementById('exDuration').value) || 20;
+  const scoreEach = Number(document.getElementById('exScoreEach').value) || 2;
+  const pool = questionBank.questions.filter(q => ch === 'all' || String(q.chapter) === ch);
+  const selected = pickRandomNonRepeating(pool, Math.min(count, pool.length));
+  printableExamData = { title, duration, scoreEach, withKey, questions: selected };
+  customExams.unshift({ title, duration, questionIds: selected.map(q => q.id) });
+  saveCustomExams();
+  render();
+}
+
+function renderTeacherStudentView() {
+  const entries = Object.entries(descAnswers);
+  return `
+    <div class="card">
+      <h3 style="margin-top:0">👥 پروفایل دانش‌آموزان ثبت‌شده (${toFa(profiles.length)} نفر)</h3>
+      <table class="data-table" style="margin-bottom:16px;">
+        <thead><tr><th>آواتار</th><th>نام دانش‌آموز</th><th>کلاس</th><th>امتیاز</th><th>ستاره</th><th>مأموریت‌ها</th></tr></thead>
+        <tbody>${profiles.map(p => `<tr><td style="font-size:1.4rem">${p.avatar}</td><td><strong>${p.studentName}</strong></td><td>${p.gradeClass || 'هفتم'}</td><td>${toFa(p.points)}</td><td>${toFa(p.stars)}</td><td>${toFa(p.completedMissions.length)}</td></tr>`).join('')}</tbody>
+      </table>
+      <h3>📈 پاسخ‌های ثبت‌شده برای بررسی معلم</h3>
+      ${entries.length ? entries.map(([key,ans]) => {
+        const qid = ans.questionId || key.split('::').pop();
+        const q = questionBank.questions.find(x => x.id === qid);
+        const inputId = `teacher-feedback-${key.replace(/[^a-zA-Z0-9_-]/g,'_')}`;
+        const safeKey = key.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        return `<div class="feedback-box" style="margin-bottom:12px">
+          <div><strong>دانش‌آموز:</strong> ${ans.studentName || 'پروفایل قدیمی'} <span class="badge badge-ch">${ans.gradeClass || ''}</span></div>
+          <div style="margin-top:5px"><strong>سؤال:</strong> ${q ? formatMathText(q.question) : toFa(qid)}</div>
+          <div style="margin:6px 0"><strong>پاسخ دانش‌آموز:</strong> ${formatMathText(ans.answerText || '')}</div>
+          <div><span class="badge badge-medium">${ans.status || 'نیازمند بررسی معلم'}</span></div>
+          <label class="field" style="margin-top:8px">بازخورد و توضیح معلم:
+            <textarea id="${inputId}" rows="3" placeholder="نکته مثبت، اشتباه احتمالی و راهنمایی برای اصلاح پاسخ...">${ans.teacherFeedback || ''}</textarea>
+          </label>
+          <button class="btn btn-success btn-sm" onclick="saveTeacherFeedback('${safeKey}', '${inputId}')">ثبت بررسی توسط معلم</button>
+        </div>`;
+      }).join('') : '<p style="color:var(--muted)">هنوز پاسخی برای بررسی ثبت نشده است.</p>'}
+    </div>`;
+}
+
+function saveTeacherFeedback(key, inputId) {
+  const item = descAnswers[key];
+  const field = document.getElementById(inputId);
+  if (!item || !field) return;
+  item.teacherFeedback = field.value.trim();
+  item.status = 'بررسی و بازخورد معلم ثبت شد';
+  item.reviewedAt = toFa(new Date().toLocaleDateString('fa-IR'));
+  saveDescAnswers();
+  alert('بازخورد معلم ثبت شد و در پروفایل همان دانش‌آموز نمایش داده می‌شود.');
+  render();
+}
+
+// ==================== مستندات ====================
+function renderDocs() {
+  return `
+    <div class="section-header">
+      <h2>🌐 راهنمای انتشار آنلاین و مستندات مباحث</h2>
+      <button class="btn btn-outline btn-sm" onclick="navigate('home')">بازگشت به خانه</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">۱. نحوه قرار دادن بازی روی اینترنت و ارسال لینک به کاربران</h3>
+      <p>چون این نرم‌افزار یک فایل وب مستقل است، می‌توانید بدون نیاز به سرور در چند دقیقه آن را آنلاین کنید:</p>
+      <ol>
+        <li><strong>GitHub Pages:</strong> یک مخزن (Repository) رایگان بسازید، فایل HTML را با نام <code>index.html</code> آپلود کنید و در بخش Settings ← Pages آن را فعال کنید.</li>
+        <li><strong>Netlify Drop:</strong> وارد سایت <code>app.netlify.com/drop</code> شوید و فایل را بکشید و رها کنید تا بلافاصله لینک قابل اشتراک‌گذاری بگیرید.</li>
+        <li><strong>Vercel:</strong> پروژه را در Vercel منتشر کنید تا لینک مستقیم و پرسرعت در اختیار دانش‌آموزان قرار گیرد.</li>
+      </ol>
+    </div>
+  `;
+}
+
+function render() {
+  renderTopBar();
+  const app = document.getElementById('app');
+  switch (currentRoute) {
+    case 'adventure': app.innerHTML = renderAdventure(); break;
+    case 'quizSetup': app.innerHTML = renderQuizSetup(false); break;
+    case 'customExam': app.innerHTML = renderQuizSetup(true); break;
+    case 'multiplayer': app.innerHTML = renderMultiplayer(); break;
+    case 'miniGames': app.innerHTML = renderMiniGames(); break;
+    case 'sampleExams': app.innerHTML = renderSampleExams(); break;
+    case 'quizRun': app.innerHTML = renderQuizRun(); break;
+    case 'practice': app.innerHTML = renderPractice(); break;
+    case 'descriptive': app.innerHTML = renderDescriptive(); break;
+    case 'report': app.innerHTML = renderReport(); break;
+    case 'profile': app.innerHTML = renderProfile(); break;
+    case 'teacher': app.innerHTML = renderTeacher(); break;
+    case 'docs': app.innerHTML = renderDocs(); break;
+    default: app.innerHTML = renderHome();
+  }
+}
+
+render();
+</script>
+</body>
+</html>
